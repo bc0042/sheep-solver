@@ -95,7 +95,7 @@ function run() {
 
     if (t2 - t1 > timeout * 1000) {
         if (stepList.length >= target - 10)
-            console.log('timeout, steps', stepList.length)
+            console.log('timeout, steps', stepList.length, count)
         return 1
     }
 
