@@ -3,7 +3,7 @@ import helper from './util/helper.js'
 
 const limit = 7
 const timeout = 5
-const resultFile = 'step1.json'
+const resultFile = 'game1.json'
 
 let gap = 0
 let cards, matchInfo, target
