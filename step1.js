@@ -3,12 +3,11 @@ import helper from './util/helper.js'
 
 const limit = 7
 const timeout = 60
+const optionsCount = 12
 const resultFile = 'game1.json'
 
-let stage1 = 180
-let optionsCount = 10
-let timeoutCount = 0
-let cards, matchInfo, target
+let timeoutCount
+let cards, matchInfo, target, stage1
 let selected, topList, stepList
 
 function init() {
@@ -17,12 +16,15 @@ function init() {
     topList = helper.init(cards)
     matchInfo = m.matchInfo
     target = cards.length
+    stage1 = parseInt(cards.length * 0.6)
+    timeoutCount = 0
 
     selected = {}
     stepList = []
     console.log('round:', ++round)
     console.log('options:', topList.length)
     console.log('try:', target)
+    console.log('stage1:', stage1)
     // process.exit()
 }
 
@@ -100,6 +102,7 @@ function run() {
         }
         if (stepList.length >= stage1 && topList.length >= optionsCount) {
             console.log('stage1')
+            console.log('timeout, steps', stepList.length, topList.length, count)
             helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
             process.exit(0)
         }

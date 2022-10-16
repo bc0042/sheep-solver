@@ -3,29 +3,27 @@ import helper from './util/helper.js'
 
 const limit = 7
 const timeout = 5
-const fromFile = 'game3.json'
-const resultFile = 'game4.json'
+const optionsCount = 12
+const resultFile = 'game1.json'
 
-let gap = 0
-let random = 0
-let cards, matchInfo, target
-let selected, topList, stepList, stepListOld
+let stage1
+let timeoutCount
+let cards, matchInfo
+let selected, topList, stepList
 
 function init() {
-    let game = helper.load(fromFile)
-    cards = game.cards
-    topList = game.topList
-    matchInfo = game.matchInfo
-    stepListOld = game.stepList
-    selected = game.selected
-    target = cards.length - gap
-    // gap += 10
+    let m = match.local()
+    cards = m.cards
+    topList = helper.init(cards)
+    matchInfo = m.matchInfo
 
+    selected = {}
     stepList = []
+    stage1 = parseInt(cards.length * 0.5)
+    timeoutCount = 0
     console.log('round:', ++round)
     console.log('options:', topList.length)
-    console.log('from:', stepListOld.length)
-    console.log('try:', target)
+    console.log('try:', stage1)
     // process.exit()
 }
 
@@ -85,9 +83,8 @@ function run() {
         return 0
     }
 
-    if (stepList.length + stepListOld.length >= target) {
+    if (stepList.length >= stage1 && topList.length >= optionsCount) {
         // print(stepList)
-        stepList = stepListOld.concat(stepList)
         console.log('cost:', (t2 - t1))
         console.log('done:', stepList.length)
         console.log('selected:', count)
@@ -99,8 +96,9 @@ function run() {
     }
 
     if (t2 - t1 > timeout * 1000) {
-        if (stepList.length >= target - 10)
-            console.log('timeout, steps', stepList.length, count)
+        if (timeoutCount++ <= 10) {
+            console.log('timeout, steps', stepList.length, topList.length, count)
+        }
         return 1
     }
 
@@ -114,15 +112,7 @@ function run() {
 }
 
 function sort() {
-    if (random) {
-        topList.sort(() => Math.random() - 0.5)
-        return
-    }
-    topList.sort((a, b) => {
-        let c1 = cards[a]
-        let c2 = cards[b]
-        return c2.idx * 100 + c2.parent.length - c1.idx * 100 + c1.parent.length
-    })
+    topList.sort(() => Math.random() - 0.5)
 }
 
 

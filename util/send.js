@@ -1,7 +1,7 @@
 import helper from './helper.js'
 import axios from './ax.js'
 
-let send = 0
+let send = 1
 let gameFile = process.argv[2] || 'game1.json'
 let game = helper.load(gameFile)
 let params = {

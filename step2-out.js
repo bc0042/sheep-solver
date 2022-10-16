@@ -3,14 +3,15 @@ import helper from './util/helper.js'
 import props from './util/props.js'
 
 const limit = 7
+const random = 1
 const timeout = 5
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
 
-let target = 235
-let random = true
+let target
+let timeoutCount
 let optionsCount = 0
-let cards, matchInfo 
+let cards, matchInfo
 let selected, topList, stepList, stepListOld
 
 function init() {
@@ -20,9 +21,12 @@ function init() {
     matchInfo = game.matchInfo
     stepListOld = game.stepList
     selected = game.selected
+    target = cards.length + 1 + 3
+    timeoutCount = 0
 
     console.log('from:', stepListOld.length)
     console.log('options:', topList.length, selectedCount())
+    // props.doShuffle(cards)
     props.doOut(selected, topList, stepListOld, cards)
 
     stepList = []
@@ -102,8 +106,9 @@ function run() {
     }
 
     if (t2 - t1 > timeout * 1000) {
-        if (stepList.length >= target - 10)
-            console.log('timeout, steps', stepList.length, count)
+        if (timeoutCount++ <= 10) {
+            console.log('timeout, steps', stepList.length, topList.length, count)
+        }
         return 1
     }
 
