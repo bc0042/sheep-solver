@@ -45,7 +45,28 @@ function removeItem(list, e) {
 }
 
 
-function afterOut(out, topList, cards) {
+function doOut(selected, topList, stepList, cards) {
+    stepList.push(-1)
+
+    let out = []
+    for (let e of Object.values(selected)) {
+        let n = e.length % 3
+        if (n > 0) {
+            out = out.concat(e.slice(-n))
+        }
+    }
+
+    out.sort((a, b) => {
+        return cards[a].idx - cards[b].idx
+    })
+    out = out.slice(0, 3)
+    console.log('out===========', out)
+
+    for (let e of Object.values(selected)) {
+        out.forEach(e1 => {
+            removeItem(e, e1)
+        })
+    }
     out.forEach(e => {
         topList.push(e)
         cards[e].parent = []
@@ -53,24 +74,8 @@ function afterOut(out, topList, cards) {
         cards.forEach(e1 => {
             removeItem(e1.parent, e)
         })
-    })
-}
 
-function doOut(selected, topList, cards) {
-    let out = []
-    for (let e of Object.values(selected)) {
-        let n = e.length % 3
-        if (n > 0) {
-            for (let e1 of e.slice(-n)) {
-                e.pop()
-                out.push(e1) // note order 
-                if (out.length == 3) {
-                    console.log('out===========', out)
-                    return afterOut(out, topList, cards)
-                }
-            }
-        }
-    }
+    })
 }
 
 export default {

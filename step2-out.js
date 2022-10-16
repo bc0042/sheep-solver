@@ -1,15 +1,16 @@
 import match from './util/match.js'
 import helper from './util/helper.js'
+import props from './util/props.js'
 
 const limit = 7
 const timeout = 5
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
 
-let gap = 30
+let target = 235
 let random = true
-let optionsCount = 10
-let cards, matchInfo, target
+let optionsCount = 0
+let cards, matchInfo 
 let selected, topList, stepList, stepListOld
 
 function init() {
@@ -19,13 +20,14 @@ function init() {
     matchInfo = game.matchInfo
     stepListOld = game.stepList
     selected = game.selected
-    target = cards.length - gap
-    // gap += 10
+
+    console.log('from:', stepListOld.length)
+    console.log('options:', topList.length, selectedCount())
+    props.doOut(selected, topList, stepListOld, cards)
 
     stepList = []
     console.log('round:', ++round)
     console.log('options:', topList.length, selectedCount())
-    console.log('from:', stepListOld.length)
     console.log('try:', target)
     // process.exit()
 }

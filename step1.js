@@ -5,7 +5,8 @@ const limit = 7
 const timeout = 60
 const resultFile = 'game1.json'
 
-let gap = 0
+let stage1 = 180
+let optionsCount = 10
 let timeoutCount = 0
 let cards, matchInfo, target
 let selected, topList, stepList
@@ -15,8 +16,7 @@ function init() {
     cards = m.cards
     topList = helper.init(cards)
     matchInfo = m.matchInfo
-    target = cards.length - gap
-    // gap += 10
+    target = cards.length
 
     selected = {}
     stepList = []
@@ -97,6 +97,11 @@ function run() {
     if (t2 - t1 > timeout * 1000) {
         if (timeoutCount++ <= 20) {
             console.log('timeout, steps', stepList.length, topList.length, count)
+        }
+        if (stepList.length >= stage1 && topList.length >= optionsCount) {
+            console.log('stage1')
+            helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
+            process.exit(0)
         }
         return 1
     }

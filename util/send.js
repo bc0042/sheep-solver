@@ -26,6 +26,11 @@ function toHex(n) {
 
 let types = []
 let arr = game.stepList.map(e => {
+    if (e == -1) {
+        params.rank_role = 2
+        return '221608ffffffffffffffffff0110ffffffffffffffffff01'
+    }
+
     let type = toHex(game.cards[e].type)
     types.push(type)
     let n = parseInt(e)
