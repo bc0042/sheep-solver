@@ -19,7 +19,7 @@ function init() {
 
     selected = {}
     stepList = []
-    stage1 = parseInt(cards.length * 0.5)
+    stage1 = parseInt(cards.length * 0.6)
     timeoutCount = 0
     console.log('round:', ++round)
     console.log('options:', topList.length)

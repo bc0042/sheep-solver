@@ -57,7 +57,8 @@ function doOut(selected, topList, stepList, cards) {
     }
 
     out.sort((a, b) => {
-        return cards[b].idx - cards[a].idx
+        return stepList.indexOf(a) - stepList.indexOf(b)
+        // return cards[b].idx - cards[a].idx
     })
     out = out.slice(0, 3)
     console.log('out===========', out)
