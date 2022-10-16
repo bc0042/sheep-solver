@@ -2,12 +2,13 @@ import match from './util/match.js'
 import helper from './util/helper.js'
 
 const limit = 7
-const timeout = 60
-const resultFile = 'game1.json'
+const timeout = 5
+const resultFile = 'game2.json'
 
-let gap = 0
-let timeoutCount = 0
-let cards, matchInfo, target
+let target = 160
+let optionsCount = 14
+let timeoutCount
+let cards, matchInfo
 let selected, topList, stepList
 
 function init() {
@@ -15,11 +16,10 @@ function init() {
     cards = m.cards
     topList = helper.init(cards)
     matchInfo = m.matchInfo
-    target = cards.length - gap
-    // gap += 10
 
     selected = {}
     stepList = []
+    timeoutCount = 0
     console.log('round:', ++round)
     console.log('options:', topList.length)
     console.log('try:', target)
@@ -82,7 +82,7 @@ function run() {
         return 0
     }
 
-    if (stepList.length >= target) {
+    if (stepList.length >= target && topList.length >= optionsCount) {
         // print(stepList)
         console.log('cost:', (t2 - t1))
         console.log('done:', stepList.length)
@@ -95,7 +95,7 @@ function run() {
     }
 
     if (t2 - t1 > timeout * 1000) {
-        if (timeoutCount++ <= 20) {
+        if (timeoutCount++ <= 10) {
             console.log('timeout, steps', stepList.length, topList.length, count)
         }
         return 1
@@ -111,11 +111,7 @@ function run() {
 }
 
 function sort() {
-    topList.sort((a, b) => {
-        let c1 = cards[a]
-        let c2 = cards[b]
-        return c2.idx * 100 + c2.parent.length - c1.idx * 100 + c1.parent.length
-    })
+    topList.sort(() => Math.random() - 0.5)
 }
 
 
@@ -124,6 +120,4 @@ while (1) {
     t1 = new Date().getTime()
     init()
     run()
-    console.log('break')
-    break
 }

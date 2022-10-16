@@ -2,26 +2,29 @@ import match from './util/match.js'
 import helper from './util/helper.js'
 
 const limit = 7
-const timeout = 60
-const resultFile = 'game1.json'
+const timeout = 5
+const fromFile = 'game3.json'
+const resultFile = 'game4.json'
 
 let gap = 0
-let timeoutCount = 0
+let random = 0
 let cards, matchInfo, target
-let selected, topList, stepList
+let selected, topList, stepList, stepListOld
 
 function init() {
-    let m = match.local()
-    cards = m.cards
-    topList = helper.init(cards)
-    matchInfo = m.matchInfo
+    let game = helper.load(fromFile)
+    cards = game.cards
+    topList = game.topList
+    matchInfo = game.matchInfo
+    stepListOld = game.stepList
+    selected = game.selected
     target = cards.length - gap
     // gap += 10
 
-    selected = {}
     stepList = []
     console.log('round:', ++round)
     console.log('options:', topList.length)
+    console.log('from:', stepListOld.length)
     console.log('try:', target)
     // process.exit()
 }
@@ -82,8 +85,9 @@ function run() {
         return 0
     }
 
-    if (stepList.length >= target) {
+    if (stepList.length + stepListOld.length >= target) {
         // print(stepList)
+        stepList = stepListOld.concat(stepList)
         console.log('cost:', (t2 - t1))
         console.log('done:', stepList.length)
         console.log('selected:', count)
@@ -95,9 +99,8 @@ function run() {
     }
 
     if (t2 - t1 > timeout * 1000) {
-        if (timeoutCount++ <= 20) {
-            console.log('timeout, steps', stepList.length, topList.length, count)
-        }
+        if (stepList.length >= target - 10)
+            console.log('timeout, steps', stepList.length, count)
         return 1
     }
 
@@ -111,6 +114,10 @@ function run() {
 }
 
 function sort() {
+    if (random) {
+        topList.sort(() => Math.random() - 0.5)
+        return
+    }
     topList.sort((a, b) => {
         let c1 = cards[a]
         let c2 = cards[b]
@@ -124,6 +131,4 @@ while (1) {
     t1 = new Date().getTime()
     init()
     run()
-    console.log('break')
-    break
 }
