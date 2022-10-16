@@ -50,13 +50,12 @@ let str = arr.join('')
 console.log(str)
 let info = Buffer.from(str, 'hex').toString('base64')
 // console.log(info)
-// console.log(types.join(','))
+console.log(types.join(','))
 params.MatchPlayInfo = info
 console.log(params)
 
 let url_over = 'https://cat-match.easygame2021.com/sheep/v1/game/game_over_ex?'
 if (send) {
-    console.log(params)
     axios.post(url_over, params).then(res => {
         console.log(res.data)
     })

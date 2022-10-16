@@ -68,6 +68,7 @@ function select(id) {
 function undo() {
     let last = stepList.pop()
     let c = cards[last]
+    c.selected = 0
     c.parent.forEach(e => {
         let c1 = cards[e]
         c1.children.push(c.idx)

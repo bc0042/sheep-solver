@@ -1,4 +1,3 @@
-import match from './util/match.js'
 import helper from './util/helper.js'
 import props from './util/props.js'
 
@@ -10,7 +9,6 @@ const resultFile = 'game2.json'
 
 let target
 let timeoutCount
-let optionsCount = 0
 let cards, matchInfo
 let selected, topList, stepList, stepListOld
 
@@ -21,7 +19,7 @@ function init() {
     matchInfo = game.matchInfo
     stepListOld = game.stepList
     selected = game.selected
-    target = cards.length + 1 + 3
+    target = cards.length 
     timeoutCount = 0
 
     console.log('from:', stepListOld.length)
@@ -29,6 +27,7 @@ function init() {
     // props.doShuffle(cards)
     // props.doOut(selected, topList, stepListOld, cards)
     props.doOut(selected, topList, stepListOld, cards)
+    target += 4
 
     stepList = []
     console.log('round:', ++round)
@@ -93,7 +92,7 @@ function run() {
         return 0
     }
 
-    if (stepList.length + stepListOld.length >= target && topList.length >= optionsCount) {
+    if (stepList.length + stepListOld.length >= target) {
         // print(stepList)
         stepList = stepListOld.concat(stepList)
         console.log('cost:', (t2 - t1))
