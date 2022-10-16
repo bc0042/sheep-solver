@@ -1,11 +1,12 @@
 # sheep-solver
-参数其他项目，用nodejs实现的羊了个羊解题步骤
+参考其他项目，用nodejs实现的羊了个羊解题步骤，无聊写着玩的
 
 https://github.com/BugMaker888/sheep
 
 https://github.com/NB-Dragon/SheepSolver
 
-无聊写着玩的，更新随缘
+https://github.com/AdamYoung1234/SheepASheepV2
+
 
 ## 用法
 安装依赖
