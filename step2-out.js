@@ -19,14 +19,15 @@ function init() {
     matchInfo = game.matchInfo
     stepListOld = game.stepList
     selected = game.selected
-    target = cards.length 
+    target = cards.length
     timeoutCount = 0
 
     console.log('from:', stepListOld.length)
     console.log('options:', topList.length, selectedCount())
     // props.doShuffle(cards)
-    // props.doOut(selected, topList, stepListOld, cards)
     props.doOut(selected, topList, stepListOld, cards)
+    target += 4
+    props.doOut2(selected, topList, stepListOld, cards)
     target += 4
 
     stepList = []

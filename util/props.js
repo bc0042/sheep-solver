@@ -70,6 +70,7 @@ function doOut(selected, topList, stepList, cards) {
     }
     out.forEach(e => {
         topList.push(e)
+        cards[e].isOut = 1
         cards[e].parent = []
         cards[e].children = []
         cards.forEach(e1 => {
@@ -77,9 +78,26 @@ function doOut(selected, topList, stepList, cards) {
         })
 
     })
+    return out
+}
+
+function doOut2(selected, topList, stepList, cards) {
+    let out1 = topList.filter(e => cards[e].isOut)
+    let out2 = doOut(selected, topList, stepList, cards)
+    stepList.pop()
+    stepList.push(-4)
+    for (let i in out1) {
+        let c1 = cards[out1[i]]
+        let c2 = cards[out2[i]]
+        c1.children.push(c2.idx)
+        c2.parent.push(c1.idx)
+        removeItem(topList, c1.idx)
+    }
+
 }
 
 export default {
     doShuffle,
     doOut,
+    doOut2,
 }
