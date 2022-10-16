@@ -21,16 +21,19 @@ function init() {
     selected = game.selected
     target = cards.length
     timeoutCount = 0
+    stepList = []
 
     console.log('from:', stepListOld.length)
     console.log('options:', topList.length, selectedCount())
+
     // props.doShuffle(cards)
+    // select(topList[0])
+    // console.log('options:', topList.length, selectedCount())
     props.doOut(selected, topList, stepListOld, cards)
     target += 4
     props.doOut2(selected, topList, stepListOld, cards)
     target += 4
 
-    stepList = []
     console.log('round:', ++round)
     console.log('options:', topList.length, selectedCount())
     console.log('try:', target)
