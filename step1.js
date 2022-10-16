@@ -2,7 +2,7 @@ import match from './util/match.js'
 import helper from './util/helper.js'
 
 const limit = 7
-const timeout = 60
+const timeout = 30
 const optionsCount = 12
 const resultFile = 'game1.json'
 
@@ -91,7 +91,7 @@ function run() {
         console.log('done:', stepList.length)
         console.log('selected:', count)
         console.log('options:', topList.length)
-        console.log('steps', stepList.join(','))
+        console.log(stepList.join(','))
         // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
         helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
         process.exit(0)

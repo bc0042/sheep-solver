@@ -2,8 +2,9 @@ import helper from './util/helper.js'
 import props from './util/props.js'
 
 const limit = 7
-const random = 1
 const timeout = 5
+const randomSort = true
+const useShuffle = false
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
 
@@ -23,16 +24,22 @@ function init() {
     timeoutCount = 0
     stepList = []
 
-    console.log('from:', stepListOld.length)
-    console.log('options:', topList.length, selectedCount())
-
-    // props.doShuffle(cards)
     // select(topList[0])
-    // console.log('options:', topList.length, selectedCount())
-    props.doOut(selected, topList, stepListOld, cards)
-    target += 4
-    props.doOut2(selected, topList, stepListOld, cards)
-    target += 4
+    let selectCount = selectedCount()
+    console.log('from:', stepListOld.length)
+    console.log('options:', topList.length, selectCount)
+
+    if (useShuffle) {
+        props.doShuffle(cards)
+    }
+    if (selectCount >= 3) {
+        props.doOut(selected, topList, stepListOld, cards)
+        target += 4
+    }
+    if (selectCount >= 6) {
+        props.doOut2(selected, topList, stepListOld, cards)
+        target += 4
+    }
 
     console.log('round:', ++round)
     console.log('options:', topList.length, selectedCount())
@@ -103,7 +110,7 @@ function run() {
         console.log('done:', stepList.length)
         console.log('selected:', count)
         console.log('options:', topList.length)
-        console.log('steps', stepList.join(','))
+        console.log(stepList.join(','))
         // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
         helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
         process.exit(0)
@@ -126,7 +133,7 @@ function run() {
 }
 
 function sort() {
-    if (random) {
+    if (randomSort) {
         topList.sort(() => Math.random() - 0.5)
         return
     }
