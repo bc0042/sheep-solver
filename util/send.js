@@ -11,7 +11,7 @@ let params = {
     "rank_role": 1,
     "rank_score": 1,
     "rank_state": 1,
-    "rank_time": 666,
+    "rank_time": 333,
     "skin": 1
 }
 params.MapSeed2 = game.matchInfo.data.map_seed_2

@@ -27,6 +27,7 @@ function init() {
     console.log('from:', stepListOld.length)
     console.log('options:', topList.length, selectedCount())
     // props.doShuffle(cards)
+    // props.doOut(selected, topList, stepListOld, cards)
     props.doOut(selected, topList, stepListOld, cards)
 
     stepList = []
