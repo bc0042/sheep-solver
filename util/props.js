@@ -46,7 +46,7 @@ function removeItem(list, e) {
 
 
 function doOut(selected, topList, stepList, cards) {
-    stepList.push(-1)
+    stepList.push(-4)
 
     let out = []
     for (let e of Object.values(selected)) {
@@ -85,7 +85,7 @@ function doOut2(selected, topList, stepList, cards) {
     let out1 = topList.filter(e => cards[e].isOut)
     let out2 = doOut(selected, topList, stepList, cards)
     stepList.pop()
-    stepList.push(-4)
+    stepList.push(-1)
     for (let i in out1) {
         let c1 = cards[out1[i]]
         let c2 = cards[out2[i]]

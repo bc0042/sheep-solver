@@ -30,6 +30,7 @@ let arr = game.stepList.map(e => {
         params.rank_role = 2
         return '221608ffffffffffffffffff0110ffffffffffffffffff01'
     }else if(e === -4){
+        params.rank_role = 2
         return '221608fcffffffffffffffff0110fcffffffffffffffff01'
     }
 

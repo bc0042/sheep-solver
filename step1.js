@@ -3,7 +3,7 @@ import helper from './util/helper.js'
 
 const limit = 7
 const timeout = 30
-const optionsCount = 12
+const optionsCount = 10
 const resultFile = 'game1.json'
 
 let timeoutCount
