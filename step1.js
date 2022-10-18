@@ -2,7 +2,7 @@ import match from './util/match.js'
 import helper from './util/helper.js'
 
 const limit = 7
-const timeout = 30
+const timeout = 5
 const optionsCount = 10
 const resultFile = 'game1.json'
 
@@ -104,6 +104,7 @@ function run() {
         if (stepList.length >= stage1 && topList.length >= optionsCount) {
             console.log('stage1')
             console.log('timeout, steps', stepList.length, topList.length, count)
+            console.log(stepList.join(','))
             helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
             process.exit(0)
         }
@@ -120,11 +121,7 @@ function run() {
 }
 
 function sort() {
-    topList.sort((a, b) => {
-        let c1 = cards[a]
-        let c2 = cards[b]
-        return c2.idx * 100 + c2.parent.length - c1.idx * 100 + c1.parent.length
-    })
+    topList.sort((a, b) => b-a)
 }
 
 
