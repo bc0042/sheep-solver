@@ -2,7 +2,7 @@ import match from './util/match.js'
 import helper from './util/helper.js'
 
 const limit = 7
-const timeout = 10
+const timeout = 30
 const optionsCount = 10
 const resultFile = 'game1.json'
 
@@ -100,6 +100,7 @@ function run() {
     if (t2 - t1 > timeout * 1000) {
         if (timeoutCount++ <= 20) {
             console.log('timeout, steps', stepList.length, topList.length, count)
+            console.log(stepList.join(','))
         }
         if (stepList.length >= stage1 && topList.length >= optionsCount) {
             console.log('stage1')
@@ -121,7 +122,28 @@ function run() {
 }
 
 function sort() {
-    topList.sort((a, b) => b-a)
+    // topList.sort((a, b) => b-a)
+    topList.sort((a, b) => {
+        let c1 = cards[a]
+        let c2 = cards[b]
+        return c2.layerNum-c1.layerNum
+        if (inLayers(c1) && inLayers(c2)) {
+            return c2.layerNum - c1.layerNum
+        } else if (inLayers(c1) && !inLayers(c2)) {
+            return -1
+        } else if (!inLayers(c1) && inLayers(c2)) {
+            return 1
+        } else {
+            return c2.idx - c1.idx
+        }
+    })
+}
+
+function inLayers(c) {
+    if(c.rolNum==4 || c.rolNum==52) return false
+    let n = c.layerNum
+    let low = 6, high = 21
+    return n >= low && n <= high
 }
 
 
