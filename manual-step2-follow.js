@@ -6,7 +6,7 @@ const timeout = 3
 const randomSort = 1
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
-const follow = [85,91,79,78,76,24,74,72,32,73,69,64,68,65,59,93,62,20,77,88,63,58,55,54,53,52,14,49,48,43,45,21,12,44,15,8,42,34,22,23,17,7,13,11,10,9,6,5,4,3,2,1,0]
+const follow = []
 const stage2 = 30
 
 let target
@@ -33,20 +33,21 @@ function init() {
     select(id)
     console.log('init select', id)
   }
-  props.doOut(selected, topList, stepList, cards)
+  props.doOut(selected, topList, stepList, stepListOld, cards)
   target += 4
-  props.doOut2(selected, topList, stepList, cards)
+  props.doOut2(selected, topList, stepList, stepListOld, cards)
   target += 4
 
   if (follow.length > 0) {
     console.log('follow====', follow.join(','))
-follow.forEach(e => {
+    follow.forEach(e => {
       select(e)
       console.log(topList.length, selectedCount(), '===')
     })
   }
 
-  console.log('round:', ++round)
+  // props.doShuffle(stepList, cards)
+
   console.log('options:', topList.length, selectedCount())
   // console.log('try:', target)
   process.exit()
@@ -145,7 +146,7 @@ function sort() {
     topList.sort(() => Math.random() - 0.5)
     return
   } else {
-    topList.sort((a, b) => b-a)
+    topList.sort((a, b) => b - a)
   }
 }
 
@@ -155,5 +156,5 @@ while (1) {
   t1 = new Date().getTime()
   init()
   run()
-  if(!randomSort) break
+  if (!randomSort) break
 }
