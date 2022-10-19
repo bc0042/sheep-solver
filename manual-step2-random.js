@@ -6,7 +6,7 @@ const timeout = 3
 const randomSort = 1
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
-const follow = [88]
+const follow = process.argv.slice(2)
 const stage2 = 30
 
 let target
@@ -41,8 +41,9 @@ function init() {
 if (follow.length > 0) {
     console.log('follow====', follow)
     follow.forEach(e => {
-      select(e)
-      console.log(topList.length, selectedCount(), '===')
+      let id = parseInt(e)
+      select(id)
+      console.log('options', topList.length, selectedCount())
     })
   }
 
