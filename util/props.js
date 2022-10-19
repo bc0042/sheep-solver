@@ -45,7 +45,7 @@ function removeItem(list, e) {
 }
 
 
-function doOut(selected, topList, stepList, cards) {
+function doOut(selected, topList, stepList, stepListOld, cards) {
     stepList.push(-4)
 
     let out = []
@@ -57,7 +57,7 @@ function doOut(selected, topList, stepList, cards) {
     }
 
     out.sort((a, b) => {
-        return stepList.indexOf(a) - stepList.indexOf(b)
+        return stepListOld.indexOf(a) - stepListOld.indexOf(b)
         // return cards[b].idx - cards[a].idx
     })
     out = out.slice(0, 3)
@@ -81,9 +81,9 @@ function doOut(selected, topList, stepList, cards) {
     return out
 }
 
-function doOut2(selected, topList, stepList, cards) {
+function doOut2(selected, topList, stepList, stepListOld, cards) {
     let out1 = topList.filter(e => cards[e].isOut)
-    let out2 = doOut(selected, topList, stepList, cards)
+    let out2 = doOut(selected, topList, stepList, stepListOld, cards)
     stepList.pop()
     stepList.push(-1)
     for (let i in out1) {

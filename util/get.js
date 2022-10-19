@@ -36,6 +36,7 @@ if (url) {
     req.then((resp) => {
         console.log(resp.data)
         fs.writeFileSync('./data/' + argv, JSON.stringify(resp.data))
+        console.log(new Date())
     }).catch(e => {
         console.log(e)
     })

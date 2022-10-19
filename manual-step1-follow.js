@@ -1,52 +1,39 @@
+import match from './util/match.js'
 import helper from './util/helper.js'
-import props from './util/props.js'
 
 const limit = 7
-const timeout = 5
-const randomSort = 0
-const fromFile = 'game1.json'
-const resultFile = 'game2.json'
-const follow = []
-const stage2 = 30
+const timeout = 3
+const optionsCount = 10
+const resultFile = 'game1.json'
+const follow = [182,181,180,179,178,177,172,176,174,160,175,171,154,173,170,70,169,165,150,168,166,142,167,164,163,162,158,152,161,155,153,159,156,147,157,146,35,151,144,134,149,148,143,145,141,137,140,138,128,139,136,131,135,133,122,132,130,41,129,127,123,126,125,124,121,120,113,119,118,31,117,114,109,116,112,108,115,67,37,111,110,102,107,105,104,106,36,26,101,96,28,71,66,60,61,57,51,103,100,29,99,47,39,98,40,33,30,27,19,97,95,16,94,92,56,93,91,87,90,86,83,81,50,46,25,38,18,89,88,84,85,82,80,77]
 
-let target
+let stage1
 let timeoutCount
 let cards, matchInfo
-let selected, topList, stepList, stepListOld
+let selected, topList, stepList
 
 function init() {
-  let game = helper.load(fromFile)
-  cards = game.cards
-  topList = game.topList
-  matchInfo = game.matchInfo
-  stepListOld = game.stepList
-  selected = game.selected
-  target = cards.length
-  timeoutCount = 0
+  let m = match.local()
+  cards = m.cards
+  topList = helper.init(cards)
+  matchInfo = m.matchInfo
+
+  selected = {}
   stepList = []
-
-  console.log('from:', stepListOld.length)
-  console.log('options:', topList.length, selectedCount())
-
-  while (selectedCount() < limit) {
-    let id = topList[0]
-    select(id)
-    console.log('init select', id)
-  }
-  props.doOut(selected, topList, stepList, cards)
-  target += 4
-  props.doOut2(selected, topList, stepList, cards)
-  target += 4
+  stage1 = parseInt(cards.length * 0.6)+20
+  timeoutCount = 0
 
   if (follow.length > 0) {
-    console.log('follow====', follow.join(','))
-    follow.forEach(e => select(e))
+    console.log('follow====', follow.length)
+    follow.forEach(e => {
+      select(e)
+      console.log(topList.length, selectedCount(), '===')
+    })
   }
 
-  console.log('round:', ++round)
   console.log('options:', topList.length, selectedCount())
-  console.log('try:', target)
-  // process.exit()
+  helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
+  process.exit()
 }
 
 function print(list) {
@@ -89,6 +76,7 @@ function select(id) {
 function undo() {
   let last = stepList.pop()
   let c = cards[last]
+  c.selected = 0
   c.parent.forEach(e => {
     let c1 = cards[e]
     c1.children.push(c.idx)
@@ -105,9 +93,8 @@ function run() {
     return 0
   }
 
-  if (stepList.length + stepListOld.length >= target) {
+  if (stepList.length >= stage1 && topList.length >= optionsCount) {
     // print(stepList)
-    stepList = stepListOld.concat(stepList)
     console.log('cost:', (t2 - t1))
     console.log('done:', stepList.length)
     console.log('selected:', count)
@@ -121,9 +108,6 @@ function run() {
   if (t2 - t1 > timeout * 1000) {
     if (timeoutCount++ <= 10) {
       console.log('timeout, steps', stepList.length, topList.length, count)
-      if (stepList.length >= stage2) {
-        console.log(stepList.join(','))
-      }
     }
     return 1
   }
@@ -138,12 +122,7 @@ function run() {
 }
 
 function sort() {
-  if (randomSort) {
-    topList.sort(() => Math.random() - 0.5)
-    return
-  } else {
-    topList.sort((a, b) => b-a)
-  }
+  topList.sort(() => Math.random() - 0.5)
 }
 
 
@@ -152,5 +131,4 @@ while (1) {
   t1 = new Date().getTime()
   init()
   run()
-  if(!randomSort) break
 }
