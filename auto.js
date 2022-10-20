@@ -33,9 +33,9 @@ let promise3 = (code) => {
   if (code === 101) {
     console.log('skip step2..')
     return null
-  } else if(code === 999){
-      console.log('ok=================')
-      process.exit()
+  } else if (code === 999) {
+    console.log('ok=================')
+    process.exit()
   }
 
   return new Promise(resolve => {
@@ -58,8 +58,10 @@ let promise3 = (code) => {
   })
 }
 
+let round = 0
 while (1) {
   console.log('>>>>>>>>>new match<<<<<<<<<<')
+  console.log('round:', ++round)
   await Promise.resolve()
     .then(promise1)
     .then(promise2)

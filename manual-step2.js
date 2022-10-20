@@ -3,7 +3,6 @@ import props from './util/props.js'
 
 const limit = 7
 const timeout = 20
-const randomSort = 0
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
 const follow = []
@@ -138,12 +137,17 @@ function run() {
 }
 
 function sort() {
-  if (randomSort) {
-    topList.sort(() => Math.random() - 0.5)
-    return
-  } else {
-    topList.sort((a, b) => b-a)
-  }
+  // topList.sort(() => Math.random() - 0.5)
+  topList.sort((a, b) => {
+    let c1 = cards[a]
+    let c2 = cards[b]
+    if (c1.layerNum == c2.layerNum) {
+      return b - a
+    } else {
+      return c2.layerNum - c1.layerNum
+    }
+  })
+
 }
 
 
@@ -152,5 +156,6 @@ while (1) {
   t1 = new Date().getTime()
   init()
   run()
-  if(!randomSort) break
+  console.log('break')
+  break
 }

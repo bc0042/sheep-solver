@@ -131,7 +131,15 @@ function run() {
 }
 
 function sort() {
-    topList.sort((a, b) => b-a)
+  topList.sort((a, b) => {
+    let c1 = cards[a]
+    let c2 = cards[b]
+      return c2.layerNum - c1.layerNum
+  //   if (c1.layerNum == c2.layerNum) {
+  //     return b - a
+  //   } else {
+  //   }
+  })
 }
 
 
