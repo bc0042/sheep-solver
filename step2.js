@@ -2,7 +2,7 @@ import helper from './util/helper.js'
 import props from './util/props.js'
 
 const limit = 7
-const timeout = 20
+const timeout = 5
 const stage2 = 30
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
@@ -26,7 +26,7 @@ function init() {
   console.log('from:', stepListOld.length)
   console.log('options:', topList.length, selectedCount())
 
-  while (selectedCount() < limit) {
+  while (selectedCount() < limit-1) {
     let id = topList[0]
     select(id)
     console.log('init select', id)
@@ -135,10 +135,6 @@ function sort() {
     let c1 = cards[a]
     let c2 = cards[b]
       return c2.layerNum - c1.layerNum
-  //   if (c1.layerNum == c2.layerNum) {
-  //     return b - a
-  //   } else {
-  //   }
   })
 }
 

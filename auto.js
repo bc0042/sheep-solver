@@ -7,11 +7,8 @@ let promise1 = () => {
       console.log(d.toString().trim())
     })
     child.on('exit', c => {
-      setTimeout(() => {
-
-        console.log('exit get match===================')
-        resolve(c)
-      }, 1000);
+      console.log('exit get match===================')
+      resolve(c)
     })
   })
 }

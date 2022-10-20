@@ -28,7 +28,7 @@ function init() {
   console.log('from:', stepListOld.length)
   console.log('options:', topList.length, selectedCount())
 
-  while (selectedCount() < limit) {
+  while (selectedCount() < limit - 1) {
     let id = topList[0]
     select(id)
     console.log('init select', id)
@@ -38,7 +38,7 @@ function init() {
   props.doOut2(selected, topList, stepList, stepListOld, cards)
   target += 4
 
-if (follow.length > 0) {
+  if (follow.length > 0) {
     console.log('follow====', follow)
     follow.forEach(e => {
       let id = parseInt(e)
@@ -146,7 +146,7 @@ function sort() {
     topList.sort(() => Math.random() - 0.5)
     return
   } else {
-    topList.sort((a, b) => b-a)
+    topList.sort((a, b) => b - a)
   }
 }
 
@@ -156,5 +156,5 @@ while (1) {
   t1 = new Date().getTime()
   init()
   run()
-  if(!randomSort) break
+  if (!randomSort) break
 }

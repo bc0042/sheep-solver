@@ -2,13 +2,13 @@ import match from './util/match.js'
 import helper from './util/helper.js'
 
 const limit = 7
-const timeout = 40
-const optionsCount = 10
+const timeout = 5*2
+const optionsCount = 11
 const percentage1 = 0.6
 const resultFile = 'game1.json'
 
 let timeoutCount
-let cards, matchInfo, target, stage1
+let cards, matchInfo, target 
 let selected, topList, stepList
 
 function init() {
@@ -16,15 +16,13 @@ function init() {
   cards = m.cards
   topList = helper.init(cards)
   matchInfo = m.matchInfo
-  target = cards.length
-  stage1 = parseInt(cards.length * percentage1)
+  target = parseInt(cards.length * percentage1)
   timeoutCount = 0
 
   selected = {}
   stepList = []
   console.log('options:', topList.length)
-  console.log('try:', target)
-  console.log('stage1:', stage1, optionsCount)
+  console.log('try:', target, optionsCount)
   // process.exit()
 }
 
@@ -85,7 +83,7 @@ function run() {
     return 0
   }
 
-  if (stepList.length >= target) {
+  if (stepList.length >= target && topList.length >= optionsCount) {
     // print(stepList)
     console.log('cost:', (t2 - t1))
     console.log('selected:', count)
@@ -100,13 +98,6 @@ function run() {
   if (t2 - t1 > timeout * 1000) {
     if (timeoutCount++ <= 10) {
       console.log('timeout, steps', stepList.length, topList.length, count)
-    }
-    if (stepList.length >= stage1 && topList.length >= optionsCount) {
-      console.log('stage1========')
-      console.log('timeout, steps', stepList.length, topList.length, count)
-      console.log(stepList.join(','))
-      helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
-      process.exit(0)
     }
     return 1
   }
@@ -124,6 +115,7 @@ function sort() {
   topList.sort((a, b) => {
     let c1 = cards[a]
     let c2 = cards[b]
+    // return c2.idx - c1.idx
     return c2.layerNum - c1.layerNum
   })
 }
