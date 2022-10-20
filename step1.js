@@ -2,13 +2,13 @@ import match from './util/match.js'
 import helper from './util/helper.js'
 
 const limit = 7
-const timeout = 5*2
-const optionsCount = 11
+const timeout = 6
 const percentage1 = 0.6
 const resultFile = 'game1.json'
 
+let overlaySize = 32
 let timeoutCount
-let cards, matchInfo, target 
+let cards, matchInfo, target
 let selected, topList, stepList
 
 function init() {
@@ -19,10 +19,15 @@ function init() {
   target = parseInt(cards.length * percentage1)
   timeoutCount = 0
 
+  if(process.argv[2]){
+    overlaySize += parseInt(process.argv[2])
+  }
+
   selected = {}
   stepList = []
   console.log('options:', topList.length)
-  console.log('try:', target, optionsCount)
+  console.log('try:', target)
+  console.log('overlay====', overlaySize)
   // process.exit()
 }
 
@@ -76,6 +81,14 @@ function undo() {
   removeItem(selected[c.type], last)
 }
 
+function overlayCount() {
+  let rest = cards.filter(e => !e.selected)
+  rest = rest.filter(e => {
+    return e.rowNum >= 32 && e.rowNum <= 40 && e.rolNum >= 24 && e.rolNum <= 32
+  })
+  return rest.length
+}
+
 function run() {
   let t2 = new Date().getTime()
   let count = selectedCount()
@@ -83,7 +96,7 @@ function run() {
     return 0
   }
 
-  if (stepList.length >= target && topList.length >= optionsCount) {
+  if (stepList.length >= target && overlayCount() <= overlaySize) {
     // print(stepList)
     console.log('cost:', (t2 - t1))
     console.log('selected:', count)

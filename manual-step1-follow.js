@@ -1,11 +1,12 @@
 import match from './util/match.js'
 import helper from './util/helper.js'
+import props from './util/props.js'
 
 const limit = 7
 const timeout = 3
 const optionsCount = 10
 const resultFile = 'game1.json'
-const follow = [182,181,180,179,178,37,35,176,159,31,177,162,149,175,166,155,174,173,146,172,171,40,170,169,167,168,165,163,164,161,160,158,157,153,156,154,143,152,147,142,151,136,41,139,130,29,150,28,17,148,132,131,145,133,117,144,129,128,141,137,113,140,125,124,138,121,36,135,134,116,127,126,25,123,122,70,120,118,109,119,115,67,114,110,100]
+const follow = [167,168,169,170,171,172,67,173,180,68,181,182,176,177,154,152,178,175,150,179,165,147,174,164,134,149,138,36,155,159,157,151,161,127,160,156,158,148,146,135,163,162,129,153,166,124,128,145,130,137,136,142,141,144,63,131,133,123,125,143,120,140,118,107,139,112,122,132,111,31,126,114,62,110,57,52,119,58,53,117,22,14,113,116,102,115,104,49,109,121,30,108,103,106,99,101,21,98,97,33,105,96,93,90,48,44,100,95,38,94,92,88,91,87,85,89,84,13,86,81,79]
 
 let stage1
 let timeoutCount
@@ -16,6 +17,8 @@ function init() {
   let m = match.local()
   cards = m.cards
   topList = helper.init(cards)
+  // cards.sort((a,b)=>b.children.length-a.children.length)
+  // console.log(cards.map(e=>e.children.length).join(','))
   matchInfo = m.matchInfo
 
   selected = {}
@@ -32,7 +35,13 @@ function init() {
   }
 
   console.log('options:', topList.length, selectedCount())
-  helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
+  print(topList)
+  console.log(topList.map(e=>cards[e].idx).join(','))
+  // helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
+
+  props.doShuffle(stepList, cards)
+  print(topList)
+  console.log(topList.map(e=>cards[e].idx).join(','))
   process.exit()
 }
 

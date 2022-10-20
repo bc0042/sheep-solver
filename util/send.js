@@ -26,7 +26,10 @@ function toHex(n) {
 
 let types = []
 let arr = game.stepList.map(e => {
-    if (e === -1) {
+    if (e === -3) {
+        params.rank_role = 2
+        return '221608fdffffffffffffffff0110fdffffffffffffffff01'
+    }else if (e === -1) {
         params.rank_role = 2
         return '221608ffffffffffffffffff0110ffffffffffffffffff01'
     }else if(e === -4){

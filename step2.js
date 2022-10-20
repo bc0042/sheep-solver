@@ -23,12 +23,14 @@ function init() {
   timeoutCount = 0
   stepList = []
 
+
   console.log('from:', stepListOld.length)
   console.log('options:', topList.length, selectedCount())
 
   while (selectedCount() < limit-1) {
     let id = topList[0]
     select(id)
+    stepListOld.push(stepList.pop()) // bug fixed 
     console.log('init select', id)
   }
   props.doOut(selected, topList, stepList, stepListOld, cards)

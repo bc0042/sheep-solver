@@ -30,6 +30,7 @@ function init() {
   while (selectedCount() < limit) {
     let id = topList[0]
     select(id)
+    stepListOld.push(stepList.pop()) // bug fixed 
     console.log('init select', id)
   }
   props.doOut(selected, topList, stepList, stepListOld, cards)
