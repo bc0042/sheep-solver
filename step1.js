@@ -2,12 +2,12 @@ import match from './util/match.js'
 import helper from './util/helper.js'
 
 const limit = 7
-const timeout = 3 * 3
+const timeout = 6 * 2
 const percentage1 = 0.7
-const bottomline = 80
+const layerLine = 6
 const resultFile = 'game1.json'
 
-let bottomSize = 50
+let highLevelSize
 let timeoutCount
 let cards, matchInfo, stage1
 let selected, topList, stepList
@@ -17,18 +17,19 @@ function init() {
   cards = m.cards
   topList = helper.init(cards)
   matchInfo = m.matchInfo
-  stage1 = parseInt(cards.length * percentage1)
+  // stage1 = parseInt(cards.length * percentage1)
   timeoutCount = 0
+  highLevelSize = parseInt(cards.length * percentage1)
 
   if (process.argv[2]) {
-    bottomSize += parseInt(process.argv[2])
+    highLevelSize += parseInt(process.argv[2])
   }
 
   selected = {}
   stepList = []
   console.log('options:', topList.length)
-  console.log('try size:', stage1)
-  console.log('bottom size:', bottomSize)
+  // console.log('try size:', stage1)
+  console.log('high level size:', highLevelSize)
   // process.exit()
 }
 
@@ -82,10 +83,21 @@ function undo() {
   removeItem(selected[c.type], last)
 }
 
-function bottomCount() {
-  let rest = cards.filter(e => !e.selected).filter(e => e.idx <= bottomline)
-  return rest.length
+function highLevelCount() {
+  return stepList.filter(e => cards[e].layerNum >= layerLine).length
 }
+
+function getSel() {
+  let sel = []
+  for (let e of Object.values(selected)) {
+    let n = e.length % 3
+    if (n > 0) {
+      sel = sel.concat(e.slice(-n))
+    }
+  }
+  return sel
+}
+
 
 function run() {
   let t2 = new Date().getTime()
@@ -94,13 +106,17 @@ function run() {
     return 0
   }
 
-  if (stepList.length >= stage1 && bottomCount() >= bottomSize) {
+  if (highLevelCount() >= highLevelSize) {
     // print(stepList)
     console.log('cost:', (t2 - t1))
     console.log('selected:', count)
     console.log('options:', topList.length)
     console.log('done:', stepList.length)
+    print(getSel())
+
     console.log(stepList.join(','))
+    console.log('====')
+    console.log(cards.filter(e => !e.selected).map(e => e.idx).join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
     process.exit(999)
@@ -108,7 +124,7 @@ function run() {
 
   if (t2 - t1 > timeout * 1000) {
     if (timeoutCount++ <= 10) {
-      console.log('timeout, steps', stepList.length, topList.length, count)
+      console.log('timeout, steps', stepList.length, topList.length, count, highLevelCount())
     }
     return 1
   }
@@ -126,8 +142,11 @@ function sort() {
   topList.sort((a, b) => {
     let c1 = cards[a]
     let c2 = cards[b]
-    return c2.idx - c1.idx
-    // return c2.layerNum - c1.layerNum
+    if (stepList.length >= 200) {
+      return c2.layerNum - c1.layerNum
+    } else {
+      return c2.idx - c1.idx
+    }
   })
 }
 

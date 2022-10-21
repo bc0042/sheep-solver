@@ -2,8 +2,8 @@ import helper from './util/helper.js'
 import props from './util/props.js'
 
 const limit = 7
-const timeout = 5
-const stage2 = 30
+const timeout = 6
+const layerLine = 6
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
 
@@ -11,6 +11,7 @@ let target
 let timeoutCount
 let cards, matchInfo
 let selected, topList, stepList, stepListOld
+
 
 function init() {
   let game = helper.load(fromFile)
@@ -23,11 +24,10 @@ function init() {
   timeoutCount = 0
   stepList = []
 
-
   console.log('from:', stepListOld.length)
   console.log('options:', topList.length, selectedCount())
 
-  while (selectedCount() < limit-1) {
+  while (selectedCount() < limit - 4) {
     let id = topList[0]
     select(id)
     stepListOld.push(stepList.pop()) // bug fixed 
@@ -35,17 +35,12 @@ function init() {
   }
   props.doOut(selected, topList, stepList, stepListOld, cards)
   target += 4
-  props.doOut2(selected, topList, stepList, stepListOld, cards)
-  target += 4
+  // props.doOut2(selected, topList, stepList, stepListOld, cards)
+  // target += 4
 
   console.log('options:', topList.length, selectedCount())
-  console.log('try:', target)
-  // process.exit()
-}
+  console.log('try size:', target)
 
-function print(list) {
-  let a = list.map(e => cards[e].name)
-  console.log(a.join(','))
 }
 
 function removeItem(list, e) {
@@ -54,10 +49,12 @@ function removeItem(list, e) {
     list.splice(i, 1)
   }
 }
+function highLevelCount() {
+  return stepList.filter(e => e >= 0 && cards[e].layerNum >= layerLine).length
+}
 
 function selectedCount() {
-  let size = Object.values(selected).map(e => e.length % 3).reduce(((a, b) => a + b), 0)
-  return size
+  return Object.values(selected).map(e => e.length % 3).reduce(((a, b) => a + b), 0)
 }
 
 function select(id) {
@@ -99,7 +96,8 @@ function run() {
     return 0
   }
 
-  if (stepList.length + stepListOld.length >= target) {
+  if (highLevelCount() >= 10) {
+  // if (stepList.length + stepListOld.length >= target) {
     // print(stepList)
     stepList = stepListOld.concat(stepList)
     console.log('cost:', (t2 - t1))
@@ -109,16 +107,14 @@ function run() {
     console.log(stepList.join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
+    console.log(topList.filter(e=>cards[e].isOut))
     process.exit(999)
   }
 
   if (t2 - t1 > timeout * 1000) {
     if (timeoutCount++ <= 10) {
-      console.log('timeout, steps', stepList.length, topList.length, count)
-      if (stepList.length >= stage2) {
-        console.log(stepList.join(','))
-        process.exit(998)
-      }
+      console.log('timeout, steps', stepList.length, topList.length, count, highLevelCount())
+      console.log(stepList.join(','))
     }
     return 1
   }
@@ -132,19 +128,43 @@ function run() {
   }
 }
 
+function getSel() {
+  let sel = []
+  for (let e of Object.values(selected)) {
+    let n = e.length % 3
+    if (n > 0) {
+      sel = sel.concat(e.slice(-n))
+    }
+  }
+  return sel
+}
+
+function mapByType(list) {
+  let map = {}
+  list.forEach(e => {
+    let c = cards[e]
+    let t = c.type
+    map[t] = map[t] || []
+    map[t].push(1)
+  })
+  return map
+}
+
 function sort() {
+  let mapTop = mapByType(topList)
+  let mapSel = mapByType(getSel())
+
   topList.sort((a, b) => {
-    let c1 = cards[a]
-    let c2 = cards[b]
-      return c2.layerNum - c1.layerNum
+    let t1 = cards[a].type
+    let t2 = cards[b].type
+    let d1 = (mapSel[t2] ? mapSel[t2].length : 0) - (mapSel[t1] ? mapSel[t1].length : 0)
+    let d2 = mapTop[t2].length - mapTop[t1].length
+    // return Math.random() - 0.5
+    return d1 == 0 ? d2 : d1
   })
 }
 
 
-let t1
-while (1) {
-  t1 = new Date().getTime()
-  init()
-  run()
-  break
-}
+let t1 = new Date().getTime()
+init()
+run()

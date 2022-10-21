@@ -2,8 +2,8 @@ import helper from './util/helper.js'
 import props from './util/props.js'
 
 const limit = 7
-const timeout = 3 * 10
-// const stage2 = 30
+const timeout = 5
+const stage2 = 30
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
 
@@ -11,7 +11,6 @@ let target
 let timeoutCount
 let cards, matchInfo
 let selected, topList, stepList, stepListOld
-
 
 function init() {
   let game = helper.load(fromFile)
@@ -24,11 +23,11 @@ function init() {
   timeoutCount = 0
   stepList = []
 
+
   console.log('from:', stepListOld.length)
   console.log('options:', topList.length, selectedCount())
-  // print(getSel())
 
-  while (selectedCount() < limit - 1) {
+  while (selectedCount() < limit-1) {
     let id = topList[0]
     select(id)
     stepListOld.push(stepList.pop()) // bug fixed 
@@ -40,8 +39,8 @@ function init() {
   target += 4
 
   console.log('options:', topList.length, selectedCount())
-  console.log('try size:', target)
-
+  console.log('try:', target)
+  // process.exit()
 }
 
 function print(list) {
@@ -116,7 +115,10 @@ function run() {
   if (t2 - t1 > timeout * 1000) {
     if (timeoutCount++ <= 10) {
       console.log('timeout, steps', stepList.length, topList.length, count)
-      console.log(stepList.join(','))
+      if (stepList.length >= stage2) {
+        console.log(stepList.join(','))
+        process.exit(998)
+      }
     }
     return 1
   }
@@ -130,59 +132,11 @@ function run() {
   }
 }
 
-function getSel() {
-  let sel = []
-  for (let e of Object.values(selected)) {
-    let n = e.length % 3
-    if (n > 0) {
-      sel = sel.concat(e.slice(-n))
-    }
-  }
-  return sel
-}
-
-function seltypes() {
-  let out = []
-  for (let e of Object.values(selected)) {
-    let n = e.length % 3
-    if (n > 0) {
-      out = out.concat(e.slice(-1))
-    }
-  }
-  out = out.map(e => cards[e].type)
-  return out
-}
-
-function mapByType(list) {
-  let map = {}
-  list.forEach(e => {
-    let c = cards[e]
-    let t = c.type
-    map[t] = map[t] || []
-    map[t].push(1)
-  })
-  return map
-}
-
 function sort() {
-  let mapTop = mapByType(topList)
-  let mapSel = mapByType(getSel())
-
   topList.sort((a, b) => {
-    let t1 = cards[a].type
-    let t2 = cards[b].type
-    let d1 = (mapSel[t2] ? mapSel[t2].length : 0) - (mapSel[t1] ? mapSel[t1].length : 0)
-    let d2 = mapTop[t2].length - mapTop[t1].length
-
-    // let d = map[c2.type].length - map[c1.type].length
-    // let x1 = map2[c2.type] ? map2[c2.type].length : 0
-    // let x2 = map2[c1.type] ? map2[c1.type].length : 0
-    // let d2 = x1 - x2
-    return d1 == 0 ? d2 : d1
-    // if (d2 != 0) return d2
-    // else return d
-    // else if(d!=0) return d
-    // else  return c2.idx-c1.idx
+    let c1 = cards[a]
+    let c2 = cards[b]
+      return c2.layerNum - c1.layerNum
   })
 }
 

@@ -1,1 +1,13 @@
-{"err_code":0,"err_msg":"","data":{"map_md5":["046ef1bab26e5b9bfe2473ded237b572","c9cea8434bdd8db6413988217bbaea0b"],"map_seed":[1322373422,2362353628,982416686,1196695080],"map_seed_2":"1663490819"}}
+{
+  "err_code": 0,
+  "err_msg": "",
+  "data": {
+    "map_md5": [
+      "046ef1bab26e5b9bfe2473ded237b572",
+      "c9cea8434bdd8db6413988217bbaea0b"
+    ],
+    "map_seed": [ 2537754768, 79338695, 2442560196, 2197024373 ]
+,
+    "map_seed_2": "1663488912"
+  }
+}
