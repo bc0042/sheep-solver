@@ -3,11 +3,11 @@ import helper from './util/helper.js'
 
 const limit = 7
 const timeout = 3 * 3
-const percentage1 = 0.8
-const bottomline = 50
+const percentage1 = 0.7
+const bottomline = 80
 const resultFile = 'game1.json'
 
-let bottomSize = 30
+let bottomSize = 50
 let timeoutCount
 let cards, matchInfo, stage1
 let selected, topList, stepList
