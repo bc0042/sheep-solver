@@ -6,10 +6,11 @@ const timeout = 6 * 2
 const percentage1 = 0.7
 const layerLine = 6
 const resultFile = 'game1.json'
+const sortType = process.argv[2]
 
 let highLevelSize
 let timeoutCount
-let cards, matchInfo, stage1
+let cards, matchInfo
 let selected, topList, stepList
 
 function init() {
@@ -21,8 +22,8 @@ function init() {
   timeoutCount = 0
   highLevelSize = parseInt(cards.length * percentage1)
 
-  if (process.argv[2]) {
-    highLevelSize += parseInt(process.argv[2])
+  if (process.argv[3]) {
+    highLevelSize += parseInt(process.argv[3])
   }
 
   selected = {}
@@ -142,10 +143,16 @@ function sort() {
   topList.sort((a, b) => {
     let c1 = cards[a]
     let c2 = cards[b]
-    if (stepList.length >= 200) {
+    if (sortType == 1) {
+      return c2.idx - c1.idx
+    } else if (sortType == 2) {
       return c2.layerNum - c1.layerNum
     } else {
-      return c2.idx - c1.idx
+      if (c2.layerNum == c1.layerNum) {
+        return c2.idx - c1.idx
+      } else {
+        return c2.layerNum - c1.layerNum
+      }
     }
   })
 }

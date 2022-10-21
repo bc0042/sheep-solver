@@ -33,10 +33,9 @@ function init() {
     stepListOld.push(stepList.pop()) // bug fixed 
     console.log('init select', id)
   }
-  // props.doOut(selected, topList, stepList, stepListOld, cards)
-  // target += 4
+
   props.doOut2(selected, topList, stepList, stepListOld, cards)
-  target += 4
+  target += 8
 
   console.log('options:', topList.length, selectedCount())
   console.log('try size:', target)
@@ -157,8 +156,8 @@ function sort() {
     let t2 = cards[b].type
     let d1 = (mapSel[t2] ? mapSel[t2].length : 0) - (mapSel[t1] ? mapSel[t1].length : 0)
     let d2 = mapTop[t2].length - mapTop[t1].length
-    return Math.random() - 0.5
-    // return d1 == 0 ? d2 : d1
+    return d1 == 0 ? d2 : d1
+    // return Math.random() - 0.5
   })
 }
 

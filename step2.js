@@ -9,6 +9,7 @@ const resultFile = 'game2.json'
 
 let target
 let timeoutCount
+let stepSize, highLevelSize
 let cards, matchInfo
 let selected, topList, stepList, stepListOld
 
@@ -23,9 +24,12 @@ function init() {
   target = cards.length
   timeoutCount = 0
   stepList = []
+  stepSize = process.argv[2] || 40
+  highLevelSize = process.argv[3] || 20
 
   console.log('from:', stepListOld.length)
   console.log('options:', topList.length, selectedCount())
+  console.log('step size:', stepSize, highLevelSize)
 
   while (selectedCount() < limit - 4) {
     let id = topList[0]
@@ -96,9 +100,11 @@ function run() {
     return 0
   }
 
-  if (highLevelCount() >= 10) {
-  // if (stepList.length + stepListOld.length >= target) {
+  // if (highLevelCount() >= 20) {
+  if (stepList.length <= stepSize && highLevelCount() >= highLevelSize) {
+    // if (stepList.length + stepListOld.length >= target) {
     // print(stepList)
+    console.log('steps:', stepList.length)
     stepList = stepListOld.concat(stepList)
     console.log('cost:', (t2 - t1))
     console.log('done:', stepList.length)
@@ -107,7 +113,7 @@ function run() {
     console.log(stepList.join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
-    console.log(topList.filter(e=>cards[e].isOut))
+    // console.log(topList.filter(e=>cards[e].isOut))
     process.exit(999)
   }
 
@@ -159,8 +165,8 @@ function sort() {
     let t2 = cards[b].type
     let d1 = (mapSel[t2] ? mapSel[t2].length : 0) - (mapSel[t1] ? mapSel[t1].length : 0)
     let d2 = mapTop[t2].length - mapTop[t1].length
-    // return Math.random() - 0.5
     return d1 == 0 ? d2 : d1
+    // return Math.random() - 0.5
   })
 }
 

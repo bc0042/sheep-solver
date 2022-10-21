@@ -69,16 +69,17 @@ function doOut(selected, topList, stepList, stepListOld, cards) {
       removeItem(e, e1)
     })
   }
-  out.forEach(e => {
+  for (let i in out) {
+    let e = out[i]
     topList.push(e)
+    cards[e].outOrder = i
     cards[e].isOut = 1
     cards[e].parent = []
     cards[e].children = []
     cards.forEach(e1 => {
       removeItem(e1.parent, e)
     })
-
-  })
+  }
   return out
 }
 
@@ -87,9 +88,10 @@ function doOut2(selected, topList, stepList, stepListOld, cards) {
   let out2 = doOut(selected, topList, stepList, stepListOld, cards)
   stepList.pop()
   stepList.push(-1)
-  for (let i in out1) {
-    let c1 = cards[out1[i]]
-    let c2 = cards[out2[i]]
+  for (let e of out1) {
+    let c1 = cards[e]
+    let order = cards[e].outOrder
+    let c2 = cards[out2[order]]
     c1.children.push(c2.idx)
     c2.parent.push(c1.idx)
     removeItem(topList, c1.idx)
