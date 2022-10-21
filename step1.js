@@ -2,13 +2,14 @@ import match from './util/match.js'
 import helper from './util/helper.js'
 
 const limit = 7
-const timeout = 6
-const percentage1 = 0.6
+const timeout = 3 * 3
+const percentage1 = 0.8
+const bottomline = 50
 const resultFile = 'game1.json'
 
-let overlaySize = 32
+let bottomSize = 30
 let timeoutCount
-let cards, matchInfo, target
+let cards, matchInfo, stage1
 let selected, topList, stepList
 
 function init() {
@@ -16,18 +17,18 @@ function init() {
   cards = m.cards
   topList = helper.init(cards)
   matchInfo = m.matchInfo
-  target = parseInt(cards.length * percentage1)
+  stage1 = parseInt(cards.length * percentage1)
   timeoutCount = 0
 
-  if(process.argv[2]){
-    overlaySize += parseInt(process.argv[2])
+  if (process.argv[2]) {
+    bottomSize += parseInt(process.argv[2])
   }
 
   selected = {}
   stepList = []
   console.log('options:', topList.length)
-  console.log('try:', target)
-  console.log('overlay====', overlaySize)
+  console.log('try size:', stage1)
+  console.log('bottom size:', bottomSize)
   // process.exit()
 }
 
@@ -81,11 +82,8 @@ function undo() {
   removeItem(selected[c.type], last)
 }
 
-function overlayCount() {
-  let rest = cards.filter(e => !e.selected)
-  rest = rest.filter(e => {
-    return e.rowNum >= 32 && e.rowNum <= 40 && e.rolNum >= 24 && e.rolNum <= 32
-  })
+function bottomCount() {
+  let rest = cards.filter(e => !e.selected).filter(e => e.idx <= bottomline)
   return rest.length
 }
 
@@ -96,7 +94,7 @@ function run() {
     return 0
   }
 
-  if (stepList.length >= target && overlayCount() <= overlaySize) {
+  if (stepList.length >= stage1 && bottomCount() >= bottomSize) {
     // print(stepList)
     console.log('cost:', (t2 - t1))
     console.log('selected:', count)
@@ -128,8 +126,8 @@ function sort() {
   topList.sort((a, b) => {
     let c1 = cards[a]
     let c2 = cards[b]
-    // return c2.idx - c1.idx
-    return c2.layerNum - c1.layerNum
+    return c2.idx - c1.idx
+    // return c2.layerNum - c1.layerNum
   })
 }
 
