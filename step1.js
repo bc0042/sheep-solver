@@ -120,7 +120,7 @@ function run() {
     console.log(cards.filter(e => !e.selected).map(e => e.idx).join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
-    process.exit(999)
+    process.exit(99)
   }
 
   if (t2 - t1 > timeout * 1000) {
