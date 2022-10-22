@@ -3,11 +3,9 @@ import props from './util/props.js'
 
 const limit = 7
 const timeout = 5
-const randomSort = 0
+const stage2 = 30
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
-const follow = []
-const stage2 = 30
 
 let target
 let timeoutCount
@@ -25,25 +23,21 @@ function init() {
   timeoutCount = 0
   stepList = []
 
+
   console.log('from:', stepListOld.length)
   console.log('options:', topList.length, selectedCount())
 
-  while (selectedCount() < limit) {
+  while (selectedCount() < limit-1) {
     let id = topList[0]
     select(id)
+    stepListOld.push(stepList.pop()) // bug fixed 
     console.log('init select', id)
   }
-  props.doOut(selected, topList, stepList, cards)
+  props.doOut(selected, topList, stepList, stepListOld, cards)
   target += 4
-  props.doOut2(selected, topList, stepList, cards)
+  props.doOut2(selected, topList, stepList, stepListOld, cards)
   target += 4
 
-  if (follow.length > 0) {
-    console.log('follow====', follow.join(','))
-    follow.forEach(e => select(e))
-  }
-
-  console.log('round:', ++round)
   console.log('options:', topList.length, selectedCount())
   console.log('try:', target)
   // process.exit()
@@ -115,7 +109,7 @@ function run() {
     console.log(stepList.join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
-    process.exit(0)
+    process.exit(999)
   }
 
   if (t2 - t1 > timeout * 1000) {
@@ -123,6 +117,7 @@ function run() {
       console.log('timeout, steps', stepList.length, topList.length, count)
       if (stepList.length >= stage2) {
         console.log(stepList.join(','))
+        process.exit(998)
       }
     }
     return 1
@@ -138,19 +133,18 @@ function run() {
 }
 
 function sort() {
-  if (randomSort) {
-    topList.sort(() => Math.random() - 0.5)
-    return
-  } else {
-    topList.sort((a, b) => b-a)
-  }
+  topList.sort((a, b) => {
+    let c1 = cards[a]
+    let c2 = cards[b]
+      return c2.layerNum - c1.layerNum
+  })
 }
 
 
-let t1, round = 0
+let t1
 while (1) {
   t1 = new Date().getTime()
   init()
   run()
-  if(!randomSort) break
+  break
 }

@@ -1,14 +1,14 @@
 import match from './util/match.js'
 import helper from './util/helper.js'
+import props from './util/props.js'
 
 const limit = 7
-const timeout = 6 * 2
-const percentage1 = 0.7
-const layerLine = 6
+const timeout = 3
+const optionsCount = 10
 const resultFile = 'game1.json'
-const sortType = process.argv[2]
+const follow = [167,168,169,170,171,172,67,173,180,68,181,182,176,177,154,152,178,175,150,179,165,147,174,164,134,149,138,36,155,159,157,151,161,127,160,156,158,148,146,135,163,162,129,153,166,124,128,145,130,137,136,142,141,144,63,131,133,123,125,143,120,140,118,107,139,112,122,132,111,31,126,114,62,110,57,52,119,58,53,117,22,14,113,116,102,115,104,49,109,121,30,108,103,106,99,101,21,98,97,33,105,96,93,90,48,44,100,95,38,94,92,88,91,87,85,89,84,13,86,81,79]
 
-let highLevelSize
+let stage1
 let timeoutCount
 let cards, matchInfo
 let selected, topList, stepList
@@ -17,21 +17,32 @@ function init() {
   let m = match.local()
   cards = m.cards
   topList = helper.init(cards)
+  // cards.sort((a,b)=>b.children.length-a.children.length)
+  // console.log(cards.map(e=>e.children.length).join(','))
   matchInfo = m.matchInfo
-  // stage1 = parseInt(cards.length * percentage1)
-  timeoutCount = 0
-  highLevelSize = parseInt(cards.length * percentage1)
-
-  if (process.argv[3]) {
-    highLevelSize += parseInt(process.argv[3])
-  }
 
   selected = {}
   stepList = []
-  console.log('options:', topList.length)
-  // console.log('try size:', stage1)
-  console.log('high level size:', highLevelSize)
-  // process.exit()
+  stage1 = parseInt(cards.length * 0.6)+20
+  timeoutCount = 0
+
+  if (follow.length > 0) {
+    console.log('follow====', follow.length)
+    follow.forEach(e => {
+      select(e)
+      console.log(e, topList.length, selectedCount(), '===')
+    })
+  }
+
+  console.log('options:', topList.length, selectedCount())
+  print(topList)
+  console.log(topList.map(e=>cards[e].idx).join(','))
+  // helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
+
+  props.doShuffle(stepList, cards)
+  print(topList)
+  console.log(topList.map(e=>cards[e].idx).join(','))
+  process.exit()
 }
 
 function print(list) {
@@ -84,22 +95,6 @@ function undo() {
   removeItem(selected[c.type], last)
 }
 
-function highLevelCount() {
-  return stepList.filter(e => cards[e].layerNum >= layerLine).length
-}
-
-function getSel() {
-  let sel = []
-  for (let e of Object.values(selected)) {
-    let n = e.length % 3
-    if (n > 0) {
-      sel = sel.concat(e.slice(-n))
-    }
-  }
-  return sel
-}
-
-
 function run() {
   let t2 = new Date().getTime()
   let count = selectedCount()
@@ -107,25 +102,21 @@ function run() {
     return 0
   }
 
-  if (highLevelCount() >= highLevelSize) {
+  if (stepList.length >= stage1 && topList.length >= optionsCount) {
     // print(stepList)
     console.log('cost:', (t2 - t1))
+    console.log('done:', stepList.length)
     console.log('selected:', count)
     console.log('options:', topList.length)
-    console.log('done:', stepList.length)
-    print(getSel())
-
     console.log(stepList.join(','))
-    console.log('====')
-    console.log(cards.filter(e => !e.selected).map(e => e.idx).join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
-    process.exit(99)
+    process.exit(0)
   }
 
   if (t2 - t1 > timeout * 1000) {
     if (timeoutCount++ <= 10) {
-      console.log('timeout, steps', stepList.length, topList.length, count, highLevelCount())
+      console.log('timeout, steps', stepList.length, topList.length, count)
     }
     return 1
   }
@@ -140,29 +131,13 @@ function run() {
 }
 
 function sort() {
-  topList.sort((a, b) => {
-    let c1 = cards[a]
-    let c2 = cards[b]
-    if (sortType == 1) {
-      return c2.idx - c1.idx
-    } else if (sortType == 2) {
-      return c2.layerNum - c1.layerNum
-    } else {
-      if (c2.layerNum == c1.layerNum) {
-        return c2.idx - c1.idx
-      } else {
-        return c2.layerNum - c1.layerNum
-      }
-    }
-  })
+  topList.sort(() => Math.random() - 0.5)
 }
 
 
-let t1
+let t1, round = 0
 while (1) {
   t1 = new Date().getTime()
   init()
   run()
-  console.log('failed')
-  process.exit(101)
 }

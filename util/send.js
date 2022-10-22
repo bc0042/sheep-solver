@@ -2,11 +2,11 @@ import helper from './helper.js'
 import axios from './ax.js'
 
 let send = 1
-let gameFile = process.argv[2] || 'game1.json'
+let gameFile = process.argv[2]
 let game = helper.load(gameFile)
 let params = {
     "MapSeed2": "",
-    "MatchPlayInfo": "",
+    // "MatchPlayInfo": "",
     "Version": "0.0.1",
     "rank_role": 1,
     "rank_score": 1,
@@ -26,7 +26,10 @@ function toHex(n) {
 
 let types = []
 let arr = game.stepList.map(e => {
-    if (e === -1) {
+    if (e === -3) {
+        params.rank_role = 2
+        return '221608fdffffffffffffffff0110fdffffffffffffffff01'
+    }else if (e === -1) {
         params.rank_role = 2
         return '221608ffffffffffffffffff0110ffffffffffffffffff01'
     }else if(e === -4){
@@ -47,17 +50,20 @@ let arr = game.stepList.map(e => {
     return line
 })
 // console.log(arr)
-arr.unshift('0803')
+// arr.unshift('0803')
+arr.unshift('0804') //toppic
 
 let str = arr.join('')
 console.log(str)
 let info = Buffer.from(str, 'hex').toString('base64')
 // console.log(info)
 console.log(types.join(','))
-params.MatchPlayInfo = info
+params.play_info = info
+// params.MatchPlayInfo = info
 console.log(params)
 
-let url_over = 'https://cat-match.easygame2021.com/sheep/v1/game/game_over_ex?'
+// let url_over = 'https://cat-match.easygame2021.com/sheep/v1/game/game_over_ex?'
+let url_over = 'https://cat-match.easygame2021.com/sheep/v1/game/topic/game_over?'
 if (send) {
     axios.post(url_over, params).then(res => {
         console.log(res.data)
