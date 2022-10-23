@@ -8,11 +8,11 @@ let params = {
     "MapSeed2": "",
     // "MatchPlayInfo": "",
     "Version": "0.0.1",
-    "rank_role": 1,
+    // "rank_role": 1,
     "rank_score": 1,
     "rank_state": 1,
     "rank_time": 333,
-    "skin": 1
+    // "skin": 1
 }
 params.MapSeed2 = game.matchInfo.data.map_seed_2
 
@@ -27,13 +27,10 @@ function toHex(n) {
 let types = []
 let arr = game.stepList.map(e => {
     if (e === -3) {
-        params.rank_role = 2
         return '221608fdffffffffffffffff0110fdffffffffffffffff01'
     }else if (e === -1) {
-        params.rank_role = 2
         return '221608ffffffffffffffffff0110ffffffffffffffffff01'
     }else if(e === -4){
-        params.rank_role = 2
         return '221608fcffffffffffffffff0110fcffffffffffffffff01'
     }
 

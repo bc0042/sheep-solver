@@ -7,7 +7,7 @@ let url2 = 'https://cat-match.easygame2021.com/sheep/v1/game/skin/info'
 let url3 = 'https://cat-match.easygame2021.com/sheep/v1/game/map_info_ex?matchType=3'
 let url4 = 'https://cat-match-static.easygame2021.com/maps/'
 let url5 = 'https://cat-match.easygame2021.com/sheep/v1/game/topic/game_start'
-let url6 = 'https://cat-match.easygame2021.com/sheep/v1/game/topic/join'
+let url6 = 'https://cat-match.easygame2021.com/sheep/v1/game/topic/game_join?'
 let url7 = 'https://cat-match.easygame2021.com/sheep/v1/game/topic/rank'
 let url8 = 'https://cat-match.easygame2021.com/sheep/v1/game/topic/info'
 
@@ -17,7 +17,7 @@ let urlmap = {
     match: url3,
     map: url4,
     topic: url5,
-    // t_join: url6,
+    t_join: url6,
     t_rank: url7,
     t_info: url8,
 }
@@ -38,6 +38,8 @@ if (url) {
                 'Host': ''
             }
         })
+    } else if (argv == 't_join') {
+        req = ax.post(url, { 'type': 2 })
     } else {
         req = ax.get(url)
     }

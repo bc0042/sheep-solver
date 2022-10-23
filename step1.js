@@ -9,8 +9,8 @@ import helper from './util/helper.js'
 
 const limit = 7
 const timeout = 6 * 2 //运算时间(秒)
-const percentage1 = 0.64 //高层卡牌百分比
-const percentage2 = 0.16 //低层卡牌百分比
+const percentage1 = 0.7 //高层卡牌百分比
+const percentage2 = 0.10 //低层卡牌百分比
 const layerLine = 6 //基准线，layer>=6层视为高层，其它为低层
 const resultFile = 'game1.json'
 const sortType = process.argv[2]
@@ -26,10 +26,10 @@ function init() {
   topList = helper.init(cards)
   matchInfo = m.matchInfo
   timeoutCount = 0
-  // highLevelSize = parseInt(cards.length * percentage1)
-  // lowLevelSize = parseInt(cards.length * percentage2)
-  highLevelSize = 130
-  lowLevelSize = 25
+  highLevelSize = parseInt(cards.length * percentage1)
+  lowLevelSize = parseInt(cards.length * percentage2)
+  // highLevelSize = 130
+  // lowLevelSize = 25
 
   if (process.argv[3]) {
     highLevelSize += parseInt(process.argv[3])
