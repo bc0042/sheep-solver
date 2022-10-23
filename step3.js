@@ -1,6 +1,12 @@
 import helper from './util/helper.js'
 import props from './util/props.js'
 
+/**
+ * 第三步目标：
+ * 再使用一次移出道具
+ * 完成全部卡牌
+ */
+
 const limit = 7
 const timeout = 6
 const layerLine = 6
@@ -25,6 +31,7 @@ function init() {
   stepList = []
 
   console.log('from:', stepListOld.length)
+  console.log('total:', target)
   console.log('options:', topList.length, selectedCount())
 
   while (selectedCount() < limit - 4) {
@@ -38,8 +45,7 @@ function init() {
   target += 8
 
   console.log('options:', topList.length, selectedCount())
-  console.log('try size:', target)
-
+  console.log('target:', target)
 }
 
 function removeItem(list, e) {
@@ -102,6 +108,7 @@ function run() {
     console.log('done:', stepList.length)
     console.log('selected:', count)
     console.log('options:', topList.length)
+    console.log('==============')
     console.log(stepList.join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
@@ -110,7 +117,8 @@ function run() {
 
   if (t2 - t1 > timeout * 1000) {
     if (timeoutCount++ <= 10) {
-      console.log('timeout, steps', stepList.length, topList.length, count, highLevelCount())
+      let hc = highLevelCount()
+      console.log('timeout, steps', stepList.length, hc, topList.length, count)
       console.log(stepList.join(','))
     }
     return 1
@@ -156,8 +164,8 @@ function sort() {
     let t2 = cards[b].type
     let d1 = (mapSel[t2] ? mapSel[t2].length : 0) - (mapSel[t1] ? mapSel[t1].length : 0)
     let d2 = mapTop[t2].length - mapTop[t1].length
-    return d1 == 0 ? d2 : d1
     // return Math.random() - 0.5
+    return d1 == 0 ? d2 : d1
   })
 }
 
@@ -165,3 +173,4 @@ function sort() {
 let t1 = new Date().getTime()
 init()
 run()
+console.log('failed')

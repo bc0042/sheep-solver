@@ -1,15 +1,20 @@
 import helper from './util/helper.js'
 import props from './util/props.js'
 
+/**
+ * 第二步目标：
+ * 使用一次移出道具
+ * 尽可能完成全部高层卡牌
+ */
+
 const limit = 7
 const timeout = 6
 const layerLine = 6
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
 
-let target
 let timeoutCount
-let stepSize, highLevelSize
+let restHighLevelSize
 let cards, matchInfo
 let selected, topList, stepList, stepListOld
 
@@ -17,19 +22,18 @@ let selected, topList, stepList, stepListOld
 function init() {
   let game = helper.load(fromFile)
   cards = game.cards
+  let total = cards.length
   topList = game.topList
   matchInfo = game.matchInfo
   stepListOld = game.stepList
   selected = game.selected
-  target = cards.length
   timeoutCount = 0
   stepList = []
-  stepSize = process.argv[2] || 30
-  highLevelSize = process.argv[3] || 20
+  restHighLevelSize = process.argv[2] || 3
 
   console.log('from:', stepListOld.length)
+  console.log('total:', total)
   console.log('options:', topList.length, selectedCount())
-  console.log('step size:', stepSize, highLevelSize)
 
   while (selectedCount() < limit - 4) {
     let id = topList[0]
@@ -38,13 +42,13 @@ function init() {
     console.log('init select', id)
   }
   props.doOut(selected, topList, stepList, stepListOld, cards)
-  target += 4
+  total += 4
   // props.doOut2(selected, topList, stepList, stepListOld, cards)
   // target += 4
 
   console.log('options:', topList.length, selectedCount())
-  console.log('total size:', target)
-
+  console.log('rest of high level:', restHighLevelSize)
+  console.log('========')
 }
 
 function removeItem(list, e) {
@@ -53,10 +57,10 @@ function removeItem(list, e) {
     list.splice(i, 1)
   }
 }
-function highLevelCount() {
+function restHighLevelCount() {
   // return stepList.filter(e => e >= 0 && cards[e].layerNum >= layerLine).length
-    let rest = cards.filter(e => !e.selected)
-    return rest.filter(e => e.layerNum >= layerLine).length
+  let rest = cards.filter(e => !e.selected)
+  return rest.filter(e => e.layerNum >= layerLine).length
 }
 
 function selectedCount() {
@@ -97,22 +101,25 @@ function undo() {
 
 function run() {
   let t2 = new Date().getTime()
-  let count = selectedCount()
-  if (count >= limit) {
+  let sc = selectedCount()
+  if (sc >= limit) {
     return 0
   }
 
-  let hc = highLevelCount()
-  if (hc <= 1) {
-  // if (highLevelCount() >= highLevelSize && stepList.length <= stepSize) {
+  let hc = restHighLevelCount()
+  if (hc <= restHighLevelSize) {
+    // if (highLevelCount() >= highLevelSize && stepList.length <= stepSize) {
     // print(stepList)
-    console.log('steps:', stepList.length)
+    let forward = stepList.length
     stepList = stepListOld.concat(stepList)
     console.log('cost:', (t2 - t1))
-    console.log('done:', stepList.length)
-    console.log('selected:', count)
     console.log('options:', topList.length)
+    console.log('selected:', sc)
+    console.log('forward:', forward)
+    console.log('stage2:', stepList.length)
+    console.log('========')
     console.log(stepList.join(','))
+    console.log('========')
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
 
     let rest = cards.filter(e => !e.selected)
@@ -122,7 +129,7 @@ function run() {
     console.log(hl.join(','))
     console.log('rest of low level:', ll.length)
     console.log(ll.join(','))
- 
+
 
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
     // console.log(topList.filter(e=>cards[e].isOut))
@@ -131,7 +138,7 @@ function run() {
 
   if (t2 - t1 > timeout * 1000) {
     if (timeoutCount++ <= 10) {
-      console.log('timeout, steps', stepList.length, hc, topList.length, count)
+      console.log('timeout, steps', stepList.length, hc, topList.length, sc)
       console.log(stepList.join(','))
     }
     return 1

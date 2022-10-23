@@ -29,14 +29,10 @@ function init() {
   highLevelSize = parseInt(cards.length * percentage1)
   lowLevelSize = parseInt(cards.length * percentage2)
 
-  if (process.argv[3]) {
-    highLevelSize += parseInt(process.argv[3])
-  }
-
   selected = {}
   stepList = []
   console.log('options:', topList.length)
-  console.log('stage1:', highLevelSize + lowLevelSize, highLevelSize)
+  console.log('target stage1:', highLevelSize + lowLevelSize, highLevelSize, lowLevelSize)
   console.log('========')
   // process.exit()
 }
@@ -116,20 +112,22 @@ function run() {
     let sel = getSel()
     console.log('cost:', (t2 - t1))
     console.log('selected:', count)
-    console.log(sel.map(e=>cards[e].name))
+    console.log(sel.map(e => cards[e].name))
     console.log('options:', topList.length)
 
+    let hl = stepList.filter(e => cards[e].layerNum >= layerLine)
+    let ll = stepList.filter(e => cards[e].layerNum < layerLine)
+    console.log('stage1:', stepList.length, hl.length, ll.length)
     console.log('========')
-    console.log('done:', stepList.length)
     console.log(stepList.join(','))
     console.log('========')
     let rest = cards.filter(e => !e.selected)
-    let hl = rest.filter(e => e.layerNum >= layerLine).map(e => e.idx)
-    let ll = rest.filter(e => e.layerNum < layerLine).map(e => e.idx)
-    console.log('rest of high level:', hl.length)
-    console.log(hl.join(','))
-    console.log('rest of low level:', ll.length)
-    console.log(ll.join(','))
+    let hl2 = rest.filter(e => e.layerNum >= layerLine).map(e => e.idx)
+    let ll2 = rest.filter(e => e.layerNum < layerLine).map(e => e.idx)
+    console.log('rest of high level:', hl2.length)
+    console.log(hl2.join(','))
+    console.log('rest of low level:', ll2.length)
+    console.log(ll2.join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
     process.exit(99)
