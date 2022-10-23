@@ -24,7 +24,7 @@ function init() {
   target = cards.length
   timeoutCount = 0
   stepList = []
-  stepSize = process.argv[2] || 40
+  stepSize = process.argv[2] || 30
   highLevelSize = process.argv[3] || 20
 
   console.log('from:', stepListOld.length)

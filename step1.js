@@ -3,7 +3,7 @@ import helper from './util/helper.js'
 
 const limit = 7
 const timeout = 6 * 2
-const percentage1 = 0.7
+const percentage1 = 0.64
 const layerLine = 6
 const resultFile = 'game1.json'
 const sortType = process.argv[2]
