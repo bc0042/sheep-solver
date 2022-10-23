@@ -43,7 +43,7 @@ function init() {
   // target += 4
 
   console.log('options:', topList.length, selectedCount())
-  console.log('try size:', target)
+  console.log('total size:', target)
 
 }
 
@@ -54,7 +54,9 @@ function removeItem(list, e) {
   }
 }
 function highLevelCount() {
-  return stepList.filter(e => e >= 0 && cards[e].layerNum >= layerLine).length
+  // return stepList.filter(e => e >= 0 && cards[e].layerNum >= layerLine).length
+    let rest = cards.filter(e => !e.selected)
+    return rest.filter(e => e.layerNum >= layerLine).length
 }
 
 function selectedCount() {
@@ -100,9 +102,9 @@ function run() {
     return 0
   }
 
-  // if (highLevelCount() >= 20) {
-  if (stepList.length <= stepSize && highLevelCount() >= highLevelSize) {
-    // if (stepList.length + stepListOld.length >= target) {
+  let hc = highLevelCount()
+  if (hc <= 1) {
+  // if (highLevelCount() >= highLevelSize && stepList.length <= stepSize) {
     // print(stepList)
     console.log('steps:', stepList.length)
     stepList = stepListOld.concat(stepList)
@@ -112,6 +114,16 @@ function run() {
     console.log('options:', topList.length)
     console.log(stepList.join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
+
+    let rest = cards.filter(e => !e.selected)
+    let hl = rest.filter(e => e.layerNum >= layerLine).map(e => e.idx)
+    let ll = rest.filter(e => e.layerNum < layerLine).map(e => e.idx)
+    console.log('rest of high level:', hl.length)
+    console.log(hl.join(','))
+    console.log('rest of low level:', ll.length)
+    console.log(ll.join(','))
+ 
+
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
     // console.log(topList.filter(e=>cards[e].isOut))
     process.exit(999)
@@ -119,7 +131,7 @@ function run() {
 
   if (t2 - t1 > timeout * 1000) {
     if (timeoutCount++ <= 10) {
-      console.log('timeout, steps', stepList.length, topList.length, count, highLevelCount())
+      console.log('timeout, steps', stepList.length, hc, topList.length, count)
       console.log(stepList.join(','))
     }
     return 1

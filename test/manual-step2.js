@@ -1,11 +1,12 @@
-import helper from './util/helper.js'
-import props from './util/props.js'
+import helper from './util/helper.js.js'
+import props from './util/props.js.js'
 
 const limit = 7
-const timeout = 5
-const stage2 = 30
+const timeout = 20
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
+const follow = []
+const stage2 = 30
 
 let target
 let timeoutCount
@@ -23,11 +24,10 @@ function init() {
   timeoutCount = 0
   stepList = []
 
-
   console.log('from:', stepListOld.length)
   console.log('options:', topList.length, selectedCount())
 
-  while (selectedCount() < limit-1) {
+  while (selectedCount() < limit) {
     let id = topList[0]
     select(id)
     stepListOld.push(stepList.pop()) // bug fixed 
@@ -38,6 +38,12 @@ function init() {
   props.doOut2(selected, topList, stepList, stepListOld, cards)
   target += 4
 
+  if (follow.length > 0) {
+    console.log('follow====', follow.join(','))
+    follow.forEach(e => select(e))
+  }
+
+  console.log('round:', ++round)
   console.log('options:', topList.length, selectedCount())
   console.log('try:', target)
   // process.exit()
@@ -109,7 +115,7 @@ function run() {
     console.log(stepList.join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
-    process.exit(999)
+    process.exit(0)
   }
 
   if (t2 - t1 > timeout * 1000) {
@@ -117,7 +123,6 @@ function run() {
       console.log('timeout, steps', stepList.length, topList.length, count)
       if (stepList.length >= stage2) {
         console.log(stepList.join(','))
-        process.exit(998)
       }
     }
     return 1
@@ -133,18 +138,25 @@ function run() {
 }
 
 function sort() {
+  // topList.sort(() => Math.random() - 0.5)
   topList.sort((a, b) => {
     let c1 = cards[a]
     let c2 = cards[b]
+    if (c1.layerNum == c2.layerNum) {
+      return b - a
+    } else {
       return c2.layerNum - c1.layerNum
+    }
   })
+
 }
 
 
-let t1
+let t1, round = 0
 while (1) {
   t1 = new Date().getTime()
   init()
   run()
+  console.log('break')
   break
 }

@@ -34,7 +34,7 @@ let step1_mode0 = () => {
     child.on('exit', c => {
       console.log('exit step1 mode0===================')
       if (c == 99) {
-        console.log('ok=================')
+        console.log('step1 ok=================')
         process.exit()
       }
       resolve(c)
@@ -53,7 +53,7 @@ let step1_mode1 = () => {
     child.on('exit', c => {
       console.log('exit step1 mode1===================')
       if (c == 99) {
-        console.log('ok=================')
+        console.log('step1 ok=================')
         process.exit()
       }
       resolve(c)
@@ -72,7 +72,7 @@ let step1_mode2 = () => {
     child.on('exit', c => {
       console.log('exit step1 mode2===================')
       if (c == 99) {
-        console.log('ok=================')
+        console.log('step1 ok=================')
         process.exit()
       }
       resolve(c)

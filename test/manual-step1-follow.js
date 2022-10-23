@@ -1,6 +1,6 @@
-import match from './util/match.js'
-import helper from './util/helper.js'
-import props from './util/props.js'
+import match from '../util/match.js'
+import helper from '../util/helper.js'
+import props from '../util/props.js'
 
 const limit = 7
 const timeout = 3

@@ -1,14 +1,21 @@
 import match from './util/match.js'
 import helper from './util/helper.js'
 
+/**
+ * 第一步目标：
+ * 完成高层卡牌数 >= 总数 * percentage1
+ * 并且消耗的低层卡牌数 <= 总数 * percentage2
+ */
+
 const limit = 7
-const timeout = 6 * 2
-const percentage1 = 0.64
-const layerLine = 6
+const timeout = 6 * 2 //运算时间(秒)
+const percentage1 = 0.64 //高层卡牌百分比
+const percentage2 = 0.16 //低层卡牌百分比
+const layerLine = 6 //基准线，layer>=6层视为高层，其它为低层
 const resultFile = 'game1.json'
 const sortType = process.argv[2]
 
-let highLevelSize
+let highLevelSize, lowLevelSize
 let timeoutCount
 let cards, matchInfo
 let selected, topList, stepList
@@ -18,9 +25,9 @@ function init() {
   cards = m.cards
   topList = helper.init(cards)
   matchInfo = m.matchInfo
-  // stage1 = parseInt(cards.length * percentage1)
   timeoutCount = 0
   highLevelSize = parseInt(cards.length * percentage1)
+  lowLevelSize = parseInt(cards.length * percentage2)
 
   if (process.argv[3]) {
     highLevelSize += parseInt(process.argv[3])
@@ -29,15 +36,11 @@ function init() {
   selected = {}
   stepList = []
   console.log('options:', topList.length)
-  // console.log('try size:', stage1)
-  console.log('high level size:', highLevelSize)
+  console.log('stage1:', highLevelSize + lowLevelSize, highLevelSize)
+  console.log('========')
   // process.exit()
 }
 
-function print(list) {
-  let a = list.map(e => cards[e].name)
-  console.log(a.join(','))
-}
 
 function removeItem(list, e) {
   let i = list.indexOf(e)
@@ -107,17 +110,26 @@ function run() {
     return 0
   }
 
-  if (highLevelCount() >= highLevelSize) {
+  let hc = highLevelCount()
+  if (hc >= highLevelSize && stepList.length <= hc + lowLevelSize) {
     // print(stepList)
+    let sel = getSel()
     console.log('cost:', (t2 - t1))
     console.log('selected:', count)
+    console.log(sel.map(e=>cards[e].name))
     console.log('options:', topList.length)
-    console.log('done:', stepList.length)
-    print(getSel())
 
+    console.log('========')
+    console.log('done:', stepList.length)
     console.log(stepList.join(','))
-    console.log('====')
-    console.log(cards.filter(e => !e.selected).map(e => e.idx).join(','))
+    console.log('========')
+    let rest = cards.filter(e => !e.selected)
+    let hl = rest.filter(e => e.layerNum >= layerLine).map(e => e.idx)
+    let ll = rest.filter(e => e.layerNum < layerLine).map(e => e.idx)
+    console.log('rest of high level:', hl.length)
+    console.log(hl.join(','))
+    console.log('rest of low level:', ll.length)
+    console.log(ll.join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
     process.exit(99)
@@ -125,7 +137,7 @@ function run() {
 
   if (t2 - t1 > timeout * 1000) {
     if (timeoutCount++ <= 10) {
-      console.log('timeout, steps', stepList.length, topList.length, count, highLevelCount())
+      console.log('timeout, steps', stepList.length, hc, topList.length, count)
     }
     return 1
   }
