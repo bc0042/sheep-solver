@@ -29,6 +29,10 @@ function init() {
   highLevelSize = parseInt(cards.length * percentage1)
   lowLevelSize = parseInt(cards.length * percentage2)
 
+  if (process.argv[3]) {
+    highLevelSize += parseInt(process.argv[3])
+  }
+
   selected = {}
   stepList = []
   console.log('options:', topList.length)

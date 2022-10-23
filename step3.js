@@ -12,6 +12,7 @@ const timeout = 6
 const layerLine = 6
 const fromFile = 'game2.json'
 const resultFile = 'game3.json'
+const isRandom = process.argv[2]
 
 let target
 let timeoutCount
@@ -164,13 +165,20 @@ function sort() {
     let t2 = cards[b].type
     let d1 = (mapSel[t2] ? mapSel[t2].length : 0) - (mapSel[t1] ? mapSel[t1].length : 0)
     let d2 = mapTop[t2].length - mapTop[t1].length
-    // return Math.random() - 0.5
-    return d1 == 0 ? d2 : d1
+    if (isRandom) {
+      return Math.random() - 0.5
+    } else {
+      return d1 == 0 ? d2 : d1
+    }
   })
 }
 
 
-let t1 = new Date().getTime()
-init()
-run()
-console.log('failed')
+let t1 
+while (1) {
+  t1 = new Date().getTime()
+  init()
+  run()
+  console.log('failed')
+  if(!isRandom) break
+}

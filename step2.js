@@ -113,6 +113,7 @@ function run() {
     let forward = stepList.length
     stepList = stepListOld.concat(stepList)
     console.log('cost:', (t2 - t1))
+    console.log('out:',topList.filter(e=>cards[e].isOut))
     console.log('options:', topList.length)
     console.log('selected:', sc)
     console.log('forward:', forward)
