@@ -90,6 +90,7 @@ function select(id) {
 function undo() {
   let last = stepList.pop()
   let c = cards[last]
+  c.selected = 0
   c.parent.forEach(e => {
     let c1 = cards[e]
     c1.children.push(c.idx)
@@ -113,7 +114,7 @@ function run() {
     let forward = stepList.length
     stepList = stepListOld.concat(stepList)
     console.log('cost:', (t2 - t1))
-    console.log('out:',topList.filter(e=>cards[e].isOut))
+    console.log('out:',topList.filter(e=>cards[e].isOut).sort((a,b)=>cards[a].outOrder-cards[b].outOrder))
     console.log('options:', topList.length)
     console.log('selected:', sc)
     console.log('forward:', forward)
