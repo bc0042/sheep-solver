@@ -26,8 +26,10 @@ function init() {
   topList = helper.init(cards)
   matchInfo = m.matchInfo
   timeoutCount = 0
-  highLevelSize = parseInt(cards.length * percentage1)
-  lowLevelSize = parseInt(cards.length * percentage2)
+  // highLevelSize = parseInt(cards.length * percentage1)
+  // lowLevelSize = parseInt(cards.length * percentage2)
+  highLevelSize = 130
+  lowLevelSize = 25
 
   if (process.argv[3]) {
     highLevelSize += parseInt(process.argv[3])

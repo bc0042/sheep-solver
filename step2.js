@@ -29,7 +29,7 @@ function init() {
   selected = game.selected
   timeoutCount = 0
   stepList = []
-  restHighLevelSize = process.argv[2] || 3
+  restHighLevelSize = process.argv[2] || 9 // 9:33
 
   console.log('from:', stepListOld.length)
   console.log('total:', total)

@@ -63,6 +63,7 @@ function doOut(selected, topList, stepList, stepListOld, cards) {
   })
   out = out.slice(0, 3)
   console.log('out===========', out)
+  // console.log(out.map(e=>cards[e].name))
 
   for (let e of Object.values(selected)) {
     out.forEach(e1 => {
