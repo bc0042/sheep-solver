@@ -1,6 +1,6 @@
 import { spawn } from 'child_process'
 
-let get_topic = () => {
+let get_match = () => {
   return new Promise(resolve => {
     let child = spawn('node', ['util/get', 'match'])
     child.stdout.on('data', d => {
@@ -74,7 +74,7 @@ while (1) {
   console.log('>>>>>>>>>new match<<<<<<<<<<')
   console.log('round:', ++round)
   await Promise.resolve()
-    .then(get_topic)
+    .then(get_match)
     .then(step1_mode0)
     .then(step1_mode1)
     .then(step1_mode2)
