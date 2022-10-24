@@ -76,6 +76,6 @@ while (1) {
   await Promise.resolve()
     .then(get_match)
     .then(step1_mode0)
-    .then(step1_mode1)
+    // .then(step1_mode1)
     .then(step1_mode2)
 }
