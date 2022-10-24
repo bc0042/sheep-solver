@@ -9,7 +9,7 @@ let params = {
     // "MatchPlayInfo": "",
     "Version": "0.0.1",
     // "rank_role": 1,
-    "rank_score": 1,
+    // "rank_score": 1,
     "rank_state": 1,
     "rank_time": 333,
     // "skin": 1
@@ -54,7 +54,7 @@ let str = arr.join('')
 console.log(str)
 let info = Buffer.from(str, 'hex').toString('base64')
 // console.log(info)
-console.log(types.join(','))
+// console.log(types.join(','))
 params.play_info = info
 // params.MatchPlayInfo = info
 console.log(params)

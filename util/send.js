@@ -57,7 +57,7 @@ let str = arr.join('')
 console.log(str)
 let info = Buffer.from(str, 'hex').toString('base64')
 // console.log(info)
-console.log(types.join(','))
+// console.log(types.join(','))
 // params.play_info = info
 params.MatchPlayInfo = info
 console.log(params)
