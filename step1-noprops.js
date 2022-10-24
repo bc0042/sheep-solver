@@ -10,7 +10,7 @@ const timeout = 6 * 10 //运算时间(秒)
 const resultFile = 'game1.json'
 const sortType = process.argv[2]
 
-let highLevelSize, lowLevelSize
+let highLevelSize 
 let timeoutCount
 let cards, matchInfo
 let selected, topList, stepList
