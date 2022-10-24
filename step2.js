@@ -17,6 +17,7 @@ let timeoutCount
 let restHighLevelSize
 let cards, matchInfo
 let selected, topList, stepList, stepListOld
+let situation
 
 
 function init() {
@@ -29,7 +30,8 @@ function init() {
   selected = game.selected
   timeoutCount = 0
   stepList = []
-  restHighLevelSize = process.argv[2] || 9 // 9:33
+  restHighLevelSize = process.argv[2] || 6
+  situation = new Set()
 
   console.log('from:', stepListOld.length)
   console.log('total:', total)
@@ -147,12 +149,20 @@ function run() {
   }
 
   sort()
+  if (remember()) return 2
+  else situation.add(topList.join(','))
+
   let options = topList.concat()
   for (let i = 0; i < options.length; i++) {
     select(options[i])
     run()
     undo()
   }
+}
+
+function remember() {
+  let s = topList.join(',')
+  return situation.has(s)
 }
 
 function getSel() {

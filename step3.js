@@ -18,6 +18,7 @@ let target
 let timeoutCount
 let cards, matchInfo
 let selected, topList, stepList, stepListOld
+let situation
 
 
 function init() {
@@ -31,6 +32,7 @@ function init() {
   timeoutCount = 0
   stepList = []
   timeout = isRandom ? 3 : 6
+  situation = new Set()
 
   console.log('from:', stepListOld.length)
   console.log('total:', target)
@@ -128,12 +130,20 @@ function run() {
   }
 
   sort()
+  if (remember()) return 2
+  else situation.add(topList.join(','))
+
   let options = topList.concat()
   for (let i = 0; i < options.length; i++) {
     select(options[i])
     run()
     undo()
   }
+}
+
+function remember() {
+  let s = topList.join(',')
+  return situation.has(s)
 }
 
 function getSel() {

@@ -91,6 +91,6 @@ while (1) {
     .then(get_topic)
     .then(copy_topic)
     .then(step1_mode0)
-    .then(step1_mode1)
+    // .then(step1_mode1)
     .then(step1_mode2)
 }

@@ -39,7 +39,8 @@ if (url) {
             }
         })
     } else if (argv == 't_join') {
-        req = ax.post(url, { 'type': 2 })
+        let t = process.argv[3] || 2 //1=left, 2=right
+        req = ax.post(url, { 'type': parseInt(t) })
     } else {
         req = ax.get(url)
     }

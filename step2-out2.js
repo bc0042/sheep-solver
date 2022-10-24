@@ -2,7 +2,7 @@ import helper from './util/helper.js'
 import props from './util/props.js'
 
 const limit = 7
-const timeout = 6
+const timeout = 6 * 2
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
 
