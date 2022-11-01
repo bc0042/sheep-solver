@@ -2,7 +2,7 @@ import helper from './helper.js'
 import axios from './ax.js'
 import path from 'path'
 import protobufjs from 'protobufjs'
-import { getSkinName } from '../data/skin.js'
+import { getSkinName } from '../data/skins.js'
 
 const send = 1
 const gameFile = process.argv[2]

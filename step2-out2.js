@@ -2,7 +2,7 @@ import helper from './util/helper.js'
 import props from './util/props.js'
 
 const limit = 7
-const timeout = 6 * 2
+const timeout = 6 * 1
 const fromFile = 'game1.json'
 const resultFile = 'game2.json'
 
@@ -104,7 +104,7 @@ function run() {
     console.log(stepList.join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
-    process.exit(999)
+    process.exit(99)
   }
 
   if (t2 - t1 > timeout * 1000) {
