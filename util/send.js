@@ -6,7 +6,7 @@ import { getSkinName } from '../data/skins.js'
 
 const send = 1
 const gameFile = process.argv[2]
-const gameType = process.argv[3] || 3
+const gameType = process.argv[3] == 3 ? 3 : 4
 const game = helper.load(gameFile)
 
 let stepInfoList = game.stepList.map(e => {
