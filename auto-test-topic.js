@@ -80,7 +80,7 @@ function step1Plus(num) {
 
 let round = 1
 while (1) {
-  console.log('>>>>>>>>>>>>>>>>>>> topic', round++)
+  console.log('>>>>>>>>>>>>>>>>>>> topic', round)
   await getTopic()
   await copyTopic()
   let code = await step1()
@@ -88,9 +88,10 @@ while (1) {
     let num = 1
     while (1) {
       await step2Out2()
-      console.log('>>>>>>>>> try', num)
+      console.log('>>>>>>>>> try', round, num)
       let code2 = await step1Plus(num++)
       if (code2 == 101) break
     }
   }
+  round++
 }
