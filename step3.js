@@ -8,12 +8,12 @@ import props from './util/props.js'
  */
 
 const limit = 7
+const timeout = 6
 const layerLine = 6
 const fromFile = 'game2.json'
 const resultFile = 'game3.json'
 const isRandom = process.argv[2]
 
-let timeout
 let target
 let timeoutCount
 let cards, matchInfo
@@ -31,7 +31,6 @@ function init() {
   target = cards.length
   timeoutCount = 0
   stepList = []
-  timeout = isRandom ? 3 : 6
   situation = new Set()
 
   console.log('from:', stepListOld.length)
@@ -69,7 +68,7 @@ function selectedCount() {
 function select(id) {
   removeItem(topList, id)
   let c = cards[id]
-    c.selected = 1
+  c.selected = 1
   c.parent.forEach(e => {
     let c1 = cards[e]
     c1.children = c1.children.filter(e1 => e1 != id)
@@ -173,15 +172,12 @@ function sort() {
   let mapSel = mapByType(getSel())
 
   topList.sort((a, b) => {
-    let t1 = cards[a].type
-    let t2 = cards[b].type
-    let d1 = (mapSel[t2] ? mapSel[t2].length : 0) - (mapSel[t1] ? mapSel[t1].length : 0)
-    let d2 = mapTop[t2].length - mapTop[t1].length
-    if (isRandom) {
-      return Math.random() - 0.5
-    } else {
-      return d1 == 0 ? d2 : d1
-    }
+    return b-a
+    // let t1 = cards[a].type
+    // let t2 = cards[b].type
+    // let d1 = (mapSel[t2] ? mapSel[t2].length : 0) - (mapSel[t1] ? mapSel[t1].length : 0)
+    // let d2 = mapTop[t2].length - mapTop[t1].length
+    // return d1 == 0 ? d2 : d1
   })
 }
 
@@ -192,5 +188,5 @@ while (1) {
   init()
   run()
   console.log('failed')
-  if(!isRandom) break
+  break
 }

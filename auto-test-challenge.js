@@ -1,8 +1,10 @@
 import { spawn } from 'child_process'
+import fs from 'fs'
+import axios from 'axios'
 
-let get_topic = () => {
+function getMatch() {
   return new Promise(resolve => {
-    let child = spawn('node', ['util/get', 'topic'])
+    let child = spawn('node', ['util/get', 'match'])
     child.stdout.on('data', d => {
       console.log(d.toString().trim())
     })
@@ -12,8 +14,7 @@ let get_topic = () => {
   })
 }
 
-
-let copy_topic = () => {
+function copyTopic() {
   return new Promise(resolve => {
     console.log('copy topic================')
     let child = spawn('cp', ['data/topic', 'data/match'])
@@ -25,9 +26,7 @@ let copy_topic = () => {
     })
   })
 }
-
-
-let step1_mode0 = () => {
+function step1() {
   return new Promise(resolve => {
     let child = spawn('node', ['step1', '0'])
     console.log('start step1 mode0===================')
@@ -37,26 +36,25 @@ let step1_mode0 = () => {
     })
     child.on('exit', c => {
       if (c == 99) {
-        console.log('step1 ok=================')
-        process.exit()
+        console.log('step1 ok <<<<<<<<<<<<<<<')
+        // process.exit()
       }
       resolve(c)
     })
   })
 }
 
-
-let step1_mode1 = () => {
+function step2Out2() {
   return new Promise(resolve => {
-    let child = spawn('node', ['step1', '1'])
-    console.log('start step1 mode1===================')
+    let child = spawn('node', ['step2-out2'])
+    console.log('start step2-out2 ===================')
     child.stdout.on('data', d => {
       let line = d.toString().trim()
       console.log(line)
     })
     child.on('exit', c => {
       if (c == 99) {
-        console.log('step1 ok=================')
+        console.log('success <<<<<<<<<<<<<<<<')
         process.exit()
       }
       resolve(c)
@@ -64,33 +62,36 @@ let step1_mode1 = () => {
   })
 }
 
-
-let step1_mode2 = () => {
+function step1Plus(num) {
   return new Promise(resolve => {
-    let child = spawn('node', ['step1', '2'])
-    console.log('start step1 mode2===================')
+    let child = spawn('node', ['step1', 0, num])
+    console.log('start step1 ===================')
     child.stdout.on('data', d => {
       let line = d.toString().trim()
       console.log(line)
     })
     child.on('exit', c => {
-      if (c == 99) {
-        console.log('step1 ok=================')
-        process.exit()
+      if (c == 101) {
+        console.log('failed and exit=================')
+        // process.exit()
       }
       resolve(c)
     })
   })
 }
 
-let round = 0
+let round = 1
 while (1) {
-  console.log('>>>>>>>>>new topic<<<<<<<<<<')
-  console.log('round:', ++round)
-  await Promise.resolve()
-    .then(get_topic)
-    .then(copy_topic)
-    .then(step1_mode0)
-    // .then(step1_mode1)
-    .then(step1_mode2)
+  console.log('>>>>>>>>>>>>>>>>>>> challenge', round++)
+  await getMatch()
+  let code = await step1()
+  if (code == 99) {
+    let num = 1
+    while (1) {
+      await step2Out2()
+      console.log('>>>>>>>>> try', num)
+      let code2 = await step1Plus(num++)
+      if (code2 == 101) break
+    }
+  }
 }

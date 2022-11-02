@@ -8,14 +8,13 @@ import helper from './util/helper.js'
  */
 
 const limit = 7
-const timeout = 6 * 2 //运算时间(秒)
+const timeout = 6 * 3 //运算时间(秒)
 const percentage1 = 0.7 //高层卡牌百分比
-const percentage2 = 0.3 //低层卡牌百分比
 const layerLine = 6 //基准线，layer>=6层视为高层，其它为低层
 const resultFile = 'game1.json'
 const sortType = process.argv[2]
 
-let highLevelSize, lowLevelSize
+let highLevelSize
 let timeoutCount
 let cards, matchInfo
 let selected, topList, stepList
@@ -27,8 +26,7 @@ function init() {
   topList = helper.init(cards)
   matchInfo = m.matchInfo
   timeoutCount = 0
-  highLevelSize = parseInt(cards.length * percentage1) 
-  lowLevelSize = parseInt(cards.length * percentage2) 
+  highLevelSize = parseInt(cards.length * percentage1) - 10
   situation = new Set()
   // highLevelSize = 150
   // lowLevelSize = 35
@@ -40,7 +38,7 @@ function init() {
   selected = {}
   stepList = []
   console.log('options:', topList.length)
-  console.log('target stage1:', highLevelSize + lowLevelSize, highLevelSize, lowLevelSize)
+  console.log('target stage1:', highLevelSize)
   console.log('========')
   // process.exit()
 }
@@ -115,7 +113,7 @@ function run() {
   }
 
   let hc = highLevelCount()
-  if (hc >= highLevelSize && stepList.length <= hc + lowLevelSize) {
+  if (hc >= highLevelSize) {
     // print(stepList)
     let sel = getSel()
     console.log('cost:', (t2 - t1))

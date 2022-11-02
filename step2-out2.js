@@ -159,12 +159,12 @@ function sort() {
   let mapSel = mapByType(getSel())
 
   topList.sort((a, b) => {
-    let t1 = cards[a].type
-    let t2 = cards[b].type
-    let d1 = (mapSel[t2] ? mapSel[t2].length : 0) - (mapSel[t1] ? mapSel[t1].length : 0)
-    let d2 = mapTop[t2].length - mapTop[t1].length
-    // return Math.random() - 0.5
-    return d1 == 0 ? d2 : d1
+    return b-a
+    // let t1 = cards[a].type
+    // let t2 = cards[b].type
+    // let d1 = (mapSel[t2] ? mapSel[t2].length : 0) - (mapSel[t1] ? mapSel[t1].length : 0)
+    // let d2 = mapTop[t2].length - mapTop[t1].length
+    // return d1 == 0 ? d2 : d1
   })
 }
 
