@@ -37,6 +37,6 @@ https://github.com/AdamYoung1234/SheepASheepV2
 
     node auto-test-challenge
 
-提交 (话题再加一个参数 topic)
+提交 (话题再加一个参数 topic, 提交话题前需要先加入 node util/get t_join 1, 加入右边把1改成2)
 
     node util/send game2.json
