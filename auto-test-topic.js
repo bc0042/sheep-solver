@@ -88,7 +88,7 @@ while (1) {
     let num = 1
     while (1) {
       await step2Out2()
-      console.log('>>>>>>>>> try', round, num)
+      console.log('>>>>>>>>> try topic', round, num)
       let code2 = await step1Plus(num++)
       if (code2 == 101) break
     }
