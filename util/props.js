@@ -45,6 +45,30 @@ function removeItem(list, e) {
   }
 }
 
+function combine(out, names) {
+  console.log('before:', names)
+  let first = names[0]
+  let second = names[1]
+  let rest = names.slice(2)
+  let i1 = rest.indexOf(first)
+  let i2 = rest.indexOf(second)
+  if (i1 >= 0) {
+    i1 += 2
+    let t = names.splice(i1, 1)
+    names.splice(1, 0, t[0])
+    t = out.splice(i1, 1)
+    out.splice(1, 0, t[0])
+    console.log('after:', names)
+  } else if (i2 >= 1) {
+    i2 += 2
+    let t = names.splice(i2, 1)
+    names.splice(2, 0, t[0])
+    t = out.splice(i2, 1)
+    out.splice(2, 0, t[0])
+    console.log('after:', names)
+  }
+}
+
 
 function doOut(selected, topList, stepList, stepListOld, cards) {
   stepList.push(-4)
@@ -61,6 +85,10 @@ function doOut(selected, topList, stepList, stepListOld, cards) {
     return stepListOld.indexOf(a) - stepListOld.indexOf(b)
     // return cards[b].idx - cards[a].idx
   })
+
+  let names = out.map(e => cards[e].name)
+  combine(out, names) // bug fixed
+
   out = out.slice(0, 3)
   console.log('out===========', out)
   // console.log(out.map(e=>cards[e].name))

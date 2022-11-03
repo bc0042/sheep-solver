@@ -8,18 +8,19 @@ import helper from './util/helper.js'
  */
 
 const limit = 7
-const timeout = 6 * 2 //运算时间(秒)
-const percentage1 = 0.7 //高层卡牌百分比
-const percentage2 = 0.3 //低层卡牌百分比
+const timeout = 6 * 6 //运算时间(秒)
+const percentage1 = 0.6 //高层卡牌百分比
 const layerLine = 6 //基准线，layer>=6层视为高层，其它为低层
 const resultFile = 'game1.json'
 const sortType = process.argv[2]
 
-let highLevelSize, lowLevelSize
 let timeoutCount
 let cards, matchInfo
 let selected, topList, stepList
 let situation
+
+let hlTotal, llTotal, p1
+let plus = parseInt(process.argv[3])
 
 function init() {
   let m = match.local()
@@ -27,21 +28,18 @@ function init() {
   topList = helper.init(cards)
   matchInfo = m.matchInfo
   timeoutCount = 0
-  highLevelSize = parseInt(cards.length * percentage1) 
-  lowLevelSize = parseInt(cards.length * percentage2) 
   situation = new Set()
-  // highLevelSize = 150
-  // lowLevelSize = 35
-
-  if (process.argv[3]) {
-    highLevelSize += parseInt(process.argv[3])
-  }
+  p1 = parseInt(cards.length * percentage1)
 
   selected = {}
   stepList = []
   console.log('options:', topList.length)
-  console.log('target stage1:', highLevelSize + lowLevelSize, highLevelSize, lowLevelSize)
   console.log('========')
+
+  hlTotal = cards.filter(e => e.layerNum >= layerLine).length
+  llTotal = cards.length - hlTotal
+  if (Number.isNaN(plus)) plus = 0
+  console.log('stage1:', hlTotal, llTotal, plus, p1)
   // process.exit()
 }
 
@@ -115,7 +113,12 @@ function run() {
   }
 
   let hc = highLevelCount()
-  if (hc >= highLevelSize && stepList.length <= hc + lowLevelSize) {
+  let lc = stepList.length - hc
+  let rhc = hlTotal - hc
+  let rlc = llTotal - lc
+  if ((rhc + plus) <= (rlc) && stepList.length >= p1) {
+    // if (hc >= highLevelSize && (hlTotal-hc)<(llTotal-lc)) {
+    // if (hc >= highLevelSize ) {
     // print(stepList)
     let sel = getSel()
     console.log('cost:', (t2 - t1))
@@ -123,18 +126,17 @@ function run() {
     console.log(sel.map(e => cards[e].name))
     console.log('options:', topList.length)
 
-    let hl = stepList.filter(e => cards[e].layerNum >= layerLine)
     let ll = stepList.filter(e => cards[e].layerNum < layerLine)
-    console.log('stage1:', stepList.length, hl.length, ll.length)
+    console.log('stage1:', stepList.length, hc, lc)
     console.log('========')
     console.log(stepList.join(','))
     console.log('========')
     let rest = cards.filter(e => !e.selected)
     let hl2 = rest.filter(e => e.layerNum >= layerLine).map(e => e.idx)
     let ll2 = rest.filter(e => e.layerNum < layerLine).map(e => e.idx)
-    console.log('rest of high level:', hl2.length)
+    console.log('rest of high level:', rhc)
     console.log(hl2.join(','))
-    console.log('rest of low level:', ll2.length)
+    console.log('rest of low level:', rlc)
     console.log(ll2.join(','))
     // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
     helper.save({ stepList, topList, selected, cards, matchInfo }, resultFile)
@@ -143,7 +145,7 @@ function run() {
 
   if (t2 - t1 > timeout * 1000) {
     if (timeoutCount++ <= 10) {
-      console.log('timeout, steps', stepList.length, hc, topList.length, count)
+      console.log('timeout, steps', stepList.length, rhc, rlc, topList.length, count)
     }
     return 1
   }
