@@ -25,7 +25,7 @@ https://github.com/AdamYoung1234/SheepASheepV2
 
     node util/get skin
 
-获取matchInfo (话题把参数改成topic, 再把data/topic复制到data/match)
+获取matchInfo (话题把参数改成topic)
 
     node util/get match
 
@@ -37,6 +37,6 @@ https://github.com/AdamYoung1234/SheepASheepV2
 
     node auto-test-challenge
 
-提交 (话题再加一个参数 topic, 提交话题前需要先加入 node util/get t_join 1, 加入右边把1改成2)
+提交 (提交话题前需要先加入 node util/get t_join 1, 加入右边把1改成2, 提交话题 node util/send game2.json topic)
 
     node util/send game2.json
