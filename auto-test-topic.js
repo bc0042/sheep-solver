@@ -82,7 +82,7 @@ let round = 1
 while (1) {
   console.log('>>>>>>>>>>>>>>>>>>> topic', round)
   await getTopic()
-  await copyTopic()
+  // await copyTopic()
   let code = await step1()
   if (code == 99) {
     let num = 1

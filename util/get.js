@@ -48,6 +48,11 @@ if (url) {
         console.log(resp.data)
         fs.writeFileSync('./data/' + argv, JSON.stringify(resp.data))
         console.log(new Date())
+
+        if(argv == 'topic'){
+          fs.writeFileSync('./data/match', JSON.stringify(resp.data))
+          console.log('sync topic to match..')
+        }
     }).catch(e => {
         console.log(e)
     })
