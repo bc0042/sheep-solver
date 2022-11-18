@@ -1,5 +1,7 @@
 # sheep-solver
-参考其他项目，用nodejs实现的羊了个羊解题步骤，无聊写着玩的
+羊了个羊模拟使用道具解题，无聊写着玩的
+
+参考项目
 
 https://github.com/BugMaker888/sheep
 
